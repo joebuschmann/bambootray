@@ -1,0 +1,13 @@
+*.DotSettings
+*.user
+Halltom.Bamboo.Tray.App/bin/
+Halltom.Bamboo.Tray.App/obj/
+*.Cache
+Halltom.Bamboo.Tray.Domain/bin/
+Halltom.Bamboo.Tray.Domain/obj/
+Halltom.Bamboo.Tray.Services/bin/
+Halltom.Bamboo.Tray.Services/obj/
+Halltom.Bamboo.Tray.Tests/bin/
+Halltom.Bamboo.Tray.Tests/obj/
+packages/
+*.suo

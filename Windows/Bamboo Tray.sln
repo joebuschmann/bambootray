@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Halltom.Bamboo.Tray.Services", "Halltom.Bamboo.Tray.Services\Halltom.Bamboo.Tray.Services.csproj", "{49DAA0E9-5232-4BB8-A3DB-B5C9130BA828}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Halltom.Bamboo.Tray.Domain", "Halltom.Bamboo.Tray.Domain\Halltom.Bamboo.Tray.Domain.csproj", "{D3E5DA79-6AA8-468A-926B-743E83EDE52D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{79122A61-D432-47AF-84B2-15ACE34C3E9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Halltom.Bamboo.Tray.Tests", "Halltom.Bamboo.Tray.Tests\Halltom.Bamboo.Tray.Tests.csproj", "{821F1FCD-924B-4EDE-B51D-AB4D94EF0EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Halltom.Bamboo.Tray.App", "Halltom.Bamboo.Tray.App\Halltom.Bamboo.Tray.App.csproj", "{7B0B5E63-C037-4934-87EF-ED635DB90A1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{EF2250B4-A998-4752-A2BF-4C2518BCACAD}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49DAA0E9-5232-4BB8-A3DB-B5C9130BA828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49DAA0E9-5232-4BB8-A3DB-B5C9130BA828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49DAA0E9-5232-4BB8-A3DB-B5C9130BA828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49DAA0E9-5232-4BB8-A3DB-B5C9130BA828}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E5DA79-6AA8-468A-926B-743E83EDE52D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E5DA79-6AA8-468A-926B-743E83EDE52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E5DA79-6AA8-468A-926B-743E83EDE52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E5DA79-6AA8-468A-926B-743E83EDE52D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{821F1FCD-924B-4EDE-B51D-AB4D94EF0EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{821F1FCD-924B-4EDE-B51D-AB4D94EF0EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{821F1FCD-924B-4EDE-B51D-AB4D94EF0EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{821F1FCD-924B-4EDE-B51D-AB4D94EF0EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B0B5E63-C037-4934-87EF-ED635DB90A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B0B5E63-C037-4934-87EF-ED635DB90A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B0B5E63-C037-4934-87EF-ED635DB90A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B0B5E63-C037-4934-87EF-ED635DB90A1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{821F1FCD-924B-4EDE-B51D-AB4D94EF0EBC} = {79122A61-D432-47AF-84B2-15ACE34C3E9B}
+	EndGlobalSection
+EndGlobal
