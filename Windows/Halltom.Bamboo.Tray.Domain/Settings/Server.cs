@@ -2,7 +2,6 @@ namespace Halltom.Bamboo.Tray.Domain.Settings
 {
     using System;
     using System.Collections.Generic;
-    using System.Security.Policy;
     using System.Xml.Serialization;
 
     [Serializable]
@@ -14,6 +13,9 @@ namespace Halltom.Bamboo.Tray.Domain.Settings
         {
             this.BuildPlans = new List<BuildPlan>();
         }
+
+        [XmlAttribute("id")]
+        public Guid Id { get; set; }
 
         [XmlAttribute("name")]
         public string Name { get; set; }
@@ -31,6 +33,7 @@ namespace Halltom.Bamboo.Tray.Domain.Settings
             {
                 return this.password;
             }
+
             set
             {
                 this.password = HashHelper.Encrypt(value);

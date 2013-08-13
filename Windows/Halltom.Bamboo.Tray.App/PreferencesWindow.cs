@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Halltom.Bamboo.Tray.App.Models;
     using Halltom.Bamboo.Tray.Domain.Resources;
     using Halltom.Bamboo.Tray.Domain.Settings;
     using Halltom.Bamboo.Tray.Services;
@@ -24,6 +25,27 @@
             this.settingsService = settingsService;
             this.PopulateServerListView();
             this.serversListBox.SelectedIndexChanged += this.ServersListBoxOnSelectedIndexChanged;
+        }
+
+        private static Server GetServerFromViewModel(ServerViewModel serverViewModel)
+        {
+            return new Server
+            {
+                Id = serverViewModel.Id,
+                Name = serverViewModel.FriendlyName,
+                Address = serverViewModel.ServerAddress.AbsoluteUri,
+                Username = serverViewModel.Username,
+                Password = serverViewModel.Password,
+            };
+        }
+
+        private static void UpdateServerModel(Server oldModel, Server newModel)
+        {
+            oldModel.Id = newModel.Id;
+            oldModel.Name = newModel.Name;
+            oldModel.Address = newModel.Address;
+            oldModel.Username = newModel.Username;
+            oldModel.Password = newModel.PlaintextPassword;
         }
 
         private void ServersListBoxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
@@ -47,16 +69,40 @@
 
             if (addServerWindow.DialogResult == DialogResult.OK)
             {
-                var server = new Server
-                                 {
-                                     Name = addServerWindow.Model.FriendlyName,
-                                     Address = addServerWindow.Model.ServerAddress.AbsoluteUri,
-                                     Username = addServerWindow.Model.Username,
-                                     Password = addServerWindow.Model.Password,
-                                 };
+                var server = GetServerFromViewModel(addServerWindow.Model);
                 this.settingsService.TraySettings.Servers.Add(server);
                 this.settingsService.SaveTraySettings();
                 this.serversListBox.DataSource = this.settingsService.TraySettings.Servers;
+            }
+        }
+
+        private void ConfigureServerButtonClick(object sender, EventArgs e)
+        {
+            if (this.serversListBox.SelectedItem != null)
+            {
+                var server = this.serversListBox.SelectedItem as Server;
+                var addServerWindow =
+                    new AddServerWindow(
+                        new ServerViewModel
+                            {
+                                Id = server.Id,
+                                ServerAddress = new Uri(server.Address),
+                                FriendlyName = server.Name,
+                                Username = server.Username,
+                                Password = server.PlaintextPassword
+                            });
+                addServerWindow.ShowDialog(this);
+
+                if (addServerWindow.DialogResult == DialogResult.OK)
+                {
+                    var newServerDetails = GetServerFromViewModel(addServerWindow.Model);
+                    var oldServerDetails = this.settingsService.TraySettings.Servers.FirstOrDefault(x => x.Id == newServerDetails.Id);
+                    UpdateServerModel(oldServerDetails, newServerDetails);
+                    this.settingsService.SaveTraySettings();
+                    this.serversListBox.DataSource = null;
+                    this.serversListBox.DisplayMember = "Name";
+                    this.serversListBox.DataSource = this.settingsService.TraySettings.Servers;
+                }
             }
         }
 

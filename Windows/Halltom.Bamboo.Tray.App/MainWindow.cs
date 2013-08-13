@@ -34,7 +34,6 @@
             this.lastBuildData = new List<MainViewModel>();
             this.buildsListView.SmallImageList = GetSmallImages();
             this.updateTimer.Interval = this.Settings.PollTime;
-            this.RefreshBuilds();
         }
 
         protected TraySettings Settings
@@ -225,6 +224,7 @@
             {
                 this.notifyIcon.Icon = Icon.FromHandle(bitmap.GetHicon());
             }
+
             this.currentBuildIcon++;
             if (this.currentBuildIcon == 4)
             {
@@ -234,7 +234,18 @@
 
         private void UpdateTimerTick(object sender, EventArgs e)
         {
-            this.RefreshBuilds();
+            try
+            {
+                this.RefreshBuilds();
+            }
+            catch (BambooRequestException)
+            {
+                this.notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
+                foreach (ListViewItem item in this.buildsListView.Items)
+                {
+                    item.ImageKey = "Offline";
+                }
+            }
         }
     }
 }

@@ -4,6 +4,8 @@
 
     public class ServerViewModel
     {
+        public Guid Id { get; set; }
+
         public Uri ServerAddress { get; set; }
         
         public string FriendlyName { get; set; }

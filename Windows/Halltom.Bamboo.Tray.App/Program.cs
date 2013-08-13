@@ -16,7 +16,7 @@
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var settingsService = new SettingsService("Settings.xml");
+            var settingsService = new SettingsService("Settings.config");
 
             Application.Run(new MainWindow(settingsService));
         }

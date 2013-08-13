@@ -14,14 +14,15 @@
         private IBambooService service;
 
         public AddServerWindow()
-            : this(new ServerViewModel())
+            : this(new ServerViewModel() { Id = Guid.NewGuid() })
         {
         }
-        
+
         public AddServerWindow(ServerViewModel model)
         {
-            this.Model = model;
             this.InitializeComponent();
+            this.Model = model;
+            this.PopulateView();
         }
 
         public ServerViewModel Model { get; private set; }
@@ -46,13 +47,12 @@
             catch (BambooRequestException ex)
             {
                 MessageBox.Show(
-                    string.Format("An error occurred whilst connecting to the server.\nPlease check your details and try again: \n\n{0}", ex.Message),
+                    string.Format(
+                        "An error occurred whilst connecting to the server.\nPlease check your details and try again: \n\n{0}",
+                        ex.Message),
                     "Unsuccessful!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {   
             }
         }
 
@@ -79,6 +79,16 @@
             this.Model.FriendlyName = this.FriendlyNameTextBox.Text;
             this.Model.Username = this.usernameTextBox.Text;
             this.Model.Password = this.passwordTextBox.Text;
+        }
+
+        private void PopulateView()
+        {
+            this.serverAddressTextBox.Text = this.Model.ServerAddress != null
+                                                 ? this.Model.ServerAddress.AbsoluteUri
+                                                 : string.Empty;
+            this.FriendlyNameTextBox.Text = this.Model.FriendlyName;
+            this.usernameTextBox.Text = this.Model.Username;
+            this.passwordTextBox.Text = this.Model.Password;
         }
     }
 }
