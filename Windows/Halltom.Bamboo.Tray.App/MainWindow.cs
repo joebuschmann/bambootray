@@ -34,6 +34,7 @@
             this.lastBuildData = new List<MainViewModel>();
             this.buildsListView.SmallImageList = GetSmallImages();
             this.updateTimer.Interval = this.Settings.PollTime;
+            this.RefreshBuilds();
         }
 
         protected TraySettings Settings

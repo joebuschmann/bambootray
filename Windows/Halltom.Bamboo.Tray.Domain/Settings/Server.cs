@@ -31,12 +31,12 @@ namespace Halltom.Bamboo.Tray.Domain.Settings
         {
             get
             {
-                return this.password;
+                return HashHelper.Decrypt(this.password);
             }
 
             set
             {
-                this.password = HashHelper.Encrypt(value);
+                this.password = value.EndsWith("==") ? value : HashHelper.Encrypt(value);
             }
         }
 
@@ -44,7 +44,7 @@ namespace Halltom.Bamboo.Tray.Domain.Settings
         {
             get
             {
-                return HashHelper.Decrypt(this.Password);
+                return HashHelper.Decrypt(this.password);
             }
         }
 
