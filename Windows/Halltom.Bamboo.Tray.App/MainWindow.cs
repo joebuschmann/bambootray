@@ -18,9 +18,11 @@
     public partial class MainWindow : Form
     {
         private readonly SettingsService settingsService;
-        
-        private int currentBuildIcon = 1;
 
+        private readonly List<Icon> buildingIcons;
+
+        private int currentBuildIcon = 0;
+        
         private bool applicationIsExiting;
 
         private List<MainViewModel> lastBuildData;
@@ -31,6 +33,9 @@
             this.settingsService = settingsService;
 
             this.notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
+            this.buildingIcons = new List<Icon>();
+            this.buildingIcons = GetBuildingIcons(4);
+
             this.lastBuildData = new List<MainViewModel>();
             this.buildsListView.SmallImageList = GetSmallImages();
             this.updateTimer.Interval = this.Settings.PollTime;
@@ -53,6 +58,21 @@
             imageList.Images.Add("Building", Resources.BambooYellow1);
             imageList.Images.Add("Offline", Resources.BambooGrey);
             return imageList;
+        }
+
+        private static List<Icon> GetBuildingIcons(int numberOfIcons)
+        {
+            var icons = new List<Icon>();
+            for (var i = 1; i < numberOfIcons; i++)
+            {
+                var bitmap = Resources.ResourceManager.GetObject("BambooYellow" + i) as Bitmap;
+                if (bitmap != null)
+                {
+                    icons.Add(Icon.FromHandle(bitmap.GetHicon()));
+                }
+            }
+
+            return icons;
         }
 
         private void RefreshBuilds()
@@ -220,16 +240,12 @@
         private void BuildIconTimerTick(object sender, EventArgs e)
         {
             // This isn't very nice, but to animate the tray icon when a build is in progress.
-            var bitmap = (Bitmap)Resources.ResourceManager.GetObject("BambooYellow" + this.currentBuildIcon);
-            if (bitmap != null)
-            {
-                this.notifyIcon.Icon = Icon.FromHandle(bitmap.GetHicon());
-            }
-
+            this.notifyIcon.Icon = this.buildingIcons[this.currentBuildIcon];
+            
             this.currentBuildIcon++;
-            if (this.currentBuildIcon == 4)
+            if (this.currentBuildIcon == 3)
             {
-                this.currentBuildIcon = 1;
+                this.currentBuildIcon = 0;
             }
         }
 
