@@ -1,10 +1,11 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
 namespace BambooTray.Domain.Resources
 {
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
-
     public class PlanDetailResonse
     {
         [JsonProperty("key")]

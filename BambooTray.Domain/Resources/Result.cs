@@ -1,7 +1,10 @@
-﻿namespace BambooTray.Domain.Resources
-{
-    using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
+namespace BambooTray.Domain.Resources
+{
+    // ReSharper disable ClassNeverInstantiated.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+    // ReSharper disable UnusedMember.Global
     public class Result
     {
         [JsonProperty("plan")]

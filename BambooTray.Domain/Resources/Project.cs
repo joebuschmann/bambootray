@@ -1,15 +1,17 @@
-﻿namespace BambooTray.Domain.Resources
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Newtonsoft.Json;
+
+namespace BambooTray.Domain.Resources
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
-    using Newtonsoft.Json;
-
+    // ReSharper disable ClassNeverInstantiated.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+    // ReSharper disable UnusedMember.Global
     public class Project
     {
         public Project()
         {
-            this.Plans = new Collection<PlanDetailResonse>();
+            Plans = new Collection<PlanDetailResonse>();
         }
 
         [JsonProperty("key")]
@@ -18,6 +20,6 @@
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        public ICollection<PlanDetailResonse> Plans { get; set; }
+        private ICollection<PlanDetailResonse> Plans { get; set; }
     }
 }

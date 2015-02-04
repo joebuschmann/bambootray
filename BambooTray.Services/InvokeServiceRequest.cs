@@ -4,9 +4,9 @@
     {
         public InvokeServiceRequest(string resource)
         {
-            this.Resource = resource;
+            Resource = resource;
         }
 
-        public string Resource { get; set; }
+        public string Resource { get; private set; }
     }
 }

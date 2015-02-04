@@ -1,7 +1,12 @@
-﻿namespace BambooTray.Services
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace BambooTray.Services
 {
-    using System;
-    using System.Runtime.Serialization;
+
+    // ReSharper disable ClassNeverInstantiated.Global
+    // ReSharper disable UnusedAutoPropertyAccessor.Global
+    // ReSharper disable UnusedMember.Global
 
     [Serializable]
     public class BambooRequestException : Exception

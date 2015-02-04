@@ -1,32 +1,28 @@
-﻿using BambooTray.App.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using BambooTray.App.Models;
+using BambooTray.Domain.Resources;
+using BambooTray.Domain.Settings;
+using BambooTray.Services;
 
 namespace BambooTray.App
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Forms;
-
-    using BambooTray.App.Models;
-    using BambooTray.Domain.Resources;
-    using BambooTray.Domain.Settings;
-    using BambooTray.Services;
-
     /// <summary>
-    /// Preferences Window
+    ///     Preferences Window
     /// </summary>
     public partial class PreferencesWindow : Form
     {
-        private readonly ISettingsService settingsService;
+        private readonly ISettingsService _settingsService;
+        private IBambooService _service;
 
-        private IBambooService service;
-        
         public PreferencesWindow(ISettingsService settingsService)
         {
-            this.InitializeComponent();
-            this.settingsService = settingsService;
-            this.PopulateServerListView();
-            this.serversListBox.SelectedIndexChanged += this.ServersListBoxOnSelectedIndexChanged;
+            InitializeComponent();
+            _settingsService = settingsService;
+            PopulateServerListView();
+            serversListBox.SelectedIndexChanged += ServersListBoxOnSelectedIndexChanged;
         }
 
         private static Server GetServerFromViewModel(ServerViewModel serverViewModel)
@@ -37,7 +33,7 @@ namespace BambooTray.App
                 Name = serverViewModel.FriendlyName,
                 Address = serverViewModel.ServerAddress.AbsoluteUri,
                 Username = serverViewModel.Username,
-                Password = serverViewModel.Password,
+                Password = serverViewModel.Password
             };
         }
 
@@ -52,15 +48,15 @@ namespace BambooTray.App
 
         private void ServersListBoxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
-            this.PopulateBuildListView(this.serversListBox.SelectedItem as Server);
+            PopulateBuildListView(serversListBox.SelectedItem as Server);
         }
 
         private void PopulateServerListView()
         {
-            if (this.settingsService.TraySettings.Servers.Count > 0)
+            if (_settingsService.TraySettings.Servers.Count > 0)
             {
-                this.serversListBox.DataSource = this.settingsService.TraySettings.Servers;
-                this.PopulateBuildListView(this.serversListBox.SelectedItem as Server);
+                serversListBox.DataSource = _settingsService.TraySettings.Servers;
+                PopulateBuildListView(serversListBox.SelectedItem as Server);
             }
         }
 
@@ -72,38 +68,42 @@ namespace BambooTray.App
             if (addServerWindow.DialogResult == DialogResult.OK)
             {
                 var server = GetServerFromViewModel(addServerWindow.Model);
-                this.settingsService.TraySettings.Servers.Add(server);
-                this.settingsService.SaveTraySettings();
-                this.serversListBox.DataSource = this.settingsService.TraySettings.Servers;
+                _settingsService.TraySettings.Servers.Add(server);
+                _settingsService.SaveTraySettings();
+                serversListBox.DataSource = _settingsService.TraySettings.Servers;
             }
         }
 
         private void ConfigureServerButtonClick(object sender, EventArgs e)
         {
-            if (this.serversListBox.SelectedItem != null)
+            if (serversListBox.SelectedItem != null)
             {
-                var server = this.serversListBox.SelectedItem as Server;
+                var server = serversListBox.SelectedItem as Server;
+                if (server == null) 
+                    return;
+
                 var addServerWindow =
                     new AddServerWindow(
                         new ServerViewModel
-                            {
-                                Id = server.Id,
-                                ServerAddress = new Uri(server.Address),
-                                FriendlyName = server.Name,
-                                Username = server.Username,
-                                Password = server.PlaintextPassword
-                            });
+                        {
+                            Id = server.Id,
+                            ServerAddress = new Uri(server.Address),
+                            FriendlyName = server.Name,
+                            Username = server.Username,
+                            Password = server.PlaintextPassword
+                        });
                 addServerWindow.ShowDialog(this);
 
                 if (addServerWindow.DialogResult == DialogResult.OK)
                 {
                     var newServerDetails = GetServerFromViewModel(addServerWindow.Model);
-                    var oldServerDetails = this.settingsService.TraySettings.Servers.FirstOrDefault(x => x.Id == newServerDetails.Id);
+                    var oldServerDetails =
+                        _settingsService.TraySettings.Servers.FirstOrDefault(x => x.Id == newServerDetails.Id);
                     UpdateServerModel(oldServerDetails, newServerDetails);
-                    this.settingsService.SaveTraySettings();
-                    this.serversListBox.DataSource = null;
-                    this.serversListBox.DisplayMember = "Name";
-                    this.serversListBox.DataSource = this.settingsService.TraySettings.Servers;
+                    _settingsService.SaveTraySettings();
+                    serversListBox.DataSource = null;
+                    serversListBox.DisplayMember = "Name";
+                    serversListBox.DataSource = _settingsService.TraySettings.Servers;
                 }
             }
         }
@@ -114,17 +114,19 @@ namespace BambooTray.App
             {
                 if (model != null)
                 {
-                    this.service = new BambooService(new Uri(model.Address), model.Username, model.PlaintextPassword);
+                    _service = new BambooService(new Uri(model.Address), model.Username, model.PlaintextPassword);
 
-                    var plans = this.service.GetAllPlans();
+                    var plans = _service.GetAllPlans();
 
-                    this.GetPlanListViewData(plans);
+                    GetPlanListViewData(plans);
                 }
             }
             catch (BambooRequestException ex)
             {
                 MessageBox.Show(
-                    string.Format("An error occurred whilst connecting to the server.\nPlease check your details and try again: \n\n{0}", ex.Message),
+                    string.Format(
+                        "An error occurred whilst connecting to the server.\nPlease check your details and try again: \n\n{0}",
+                        ex.Message),
                     "Unsuccessful!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -134,12 +136,14 @@ namespace BambooTray.App
         private void GetPlanListViewData(IEnumerable<PlanDetailResonse> list)
         {
             Server currentServer = null;
-            if (this.serversListBox.SelectedItem != null)
+            if (serversListBox.SelectedItem != null)
             {
-                currentServer = this.settingsService.TraySettings.Servers.FirstOrDefault(x => x.Name == ((Server)this.serversListBox.SelectedItem).Name);
+                currentServer =
+                    _settingsService.TraySettings.Servers.FirstOrDefault(
+                        x => x.Name == ((Server) serversListBox.SelectedItem).Name);
             }
-            
-            this.buildPlansListView.Items.Clear();
+
+            buildPlansListView.Items.Clear();
             foreach (var p in list)
             {
                 var selected = false;
@@ -154,32 +158,32 @@ namespace BambooTray.App
                     selected = true;
                 }
 
-                var lv = new ListViewItem { Text = p.Name, Tag = p, Checked = selected };
-                this.buildPlansListView.Items.Add(lv);
+                var lv = new ListViewItem {Text = p.Name, Tag = p, Checked = selected};
+                buildPlansListView.Items.Add(lv);
             }
         }
 
         private void RemoveServerButtonClick(object sender, EventArgs e)
         {
-            if (this.serversListBox.SelectedItem != null)
+            if (serversListBox.SelectedItem != null)
             {
-                this.settingsService.TraySettings.Servers.Remove(this.serversListBox.SelectedItem as Server);
-                this.settingsService.SaveTraySettings();
-                this.serversListBox.DataSource = null;
-                this.serversListBox.DataSource = this.settingsService.TraySettings.Servers;
+                _settingsService.TraySettings.Servers.Remove(serversListBox.SelectedItem as Server);
+                _settingsService.SaveTraySettings();
+                serversListBox.DataSource = null;
+                serversListBox.DataSource = _settingsService.TraySettings.Servers;
             }
         }
 
         private void BuildPlansListViewItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            var server = this.serversListBox.SelectedItem as Server;
+            var server = serversListBox.SelectedItem as Server;
             if (server != null)
             {
                 var buildPlan = e.Item.Tag as PlanDetailResonse;
-                var serverSettings = this.settingsService.TraySettings.Servers.FirstOrDefault(x => x.Name == server.Name);
+                var serverSettings = _settingsService.TraySettings.Servers.FirstOrDefault(x => x.Name == server.Name);
                 if (serverSettings != null && buildPlan != null && e.Item.Checked)
                 {
-                    serverSettings.BuildPlans.Add(new BuildPlan { Key = buildPlan.Key });
+                    serverSettings.BuildPlans.Add(new BuildPlan {Key = buildPlan.Key});
                 }
                 else if (serverSettings != null & buildPlan != null)
                 {
@@ -190,7 +194,7 @@ namespace BambooTray.App
                     }
                 }
 
-                this.settingsService.SaveTraySettings();
+                _settingsService.SaveTraySettings();
             }
         }
     }

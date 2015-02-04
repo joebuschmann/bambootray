@@ -10,16 +10,17 @@
     {
         public AboutWindow()
         {
-            this.InitializeComponent();
-            this.Text = string.Format("About {0}", this.AssemblyTitle);
-            this.labelProductName.Text = this.AssemblyProduct;
-            this.labelVersion.Text = string.Format("Version {0}", this.AssemblyVersion);
-            this.labelCopyright.Text = this.AssemblyCopyright;
-            this.labelCompanyName.Text = this.AssemblyCompany;
-            this.textBoxDescription.Text = this.AssemblyDescription;
+            InitializeComponent();
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
+            Text = string.Format("About {0}", AssemblyTitle);
+            labelProductName.Text = AssemblyProduct;
+            labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
+            labelCopyright.Text = AssemblyCopyright;
+            labelCompanyName.Text = AssemblyCompany;
+            textBoxDescription.Text = AssemblyDescription;
         }
 
-        public string AssemblyTitle
+        private static string AssemblyTitle
         {
             get
             {
@@ -37,7 +38,7 @@
             }
         }
 
-        public string AssemblyVersion
+        private static string AssemblyVersion
         {
             get
             {
@@ -45,7 +46,7 @@
             }
         }
 
-        public string AssemblyDescription
+        private static string AssemblyDescription
         {
             get
             {
@@ -59,7 +60,7 @@
             }
         }
 
-        public string AssemblyProduct
+        private static string AssemblyProduct
         {
             get
             {
@@ -73,7 +74,7 @@
             }
         }
 
-        public string AssemblyCopyright
+        private static string AssemblyCopyright
         {
             get
             {
@@ -87,7 +88,7 @@
             }
         }
 
-        public string AssemblyCompany
+        private static string AssemblyCompany
         {
             get
             {

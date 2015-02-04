@@ -1,7 +1,9 @@
-﻿namespace BambooTray.Domain.Resources
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable UnusedMember.Global
+namespace BambooTray.Domain.Resources
+{
     /// <summary>
     /// InfoResponse Resource
     /// </summary>

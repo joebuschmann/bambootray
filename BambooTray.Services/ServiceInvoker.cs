@@ -12,11 +12,11 @@
     /// </summary>
     public class ServiceInvoker
     {
-        private readonly Uri endPointUri;
+        private readonly Uri _endPointUri;
 
-        private readonly string userName;
+        private readonly string _userName;
 
-        private readonly string password;
+        private readonly string _password;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceInvoker"/> class.
@@ -32,9 +32,9 @@
         /// </param>
         public ServiceInvoker(Uri endPointUri, string userName, string password)
         {
-            this.endPointUri = endPointUri;
-            this.userName = userName;
-            this.password = password;
+            _endPointUri = endPointUri;
+            _userName = userName;
+            _password = password;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
         /// </returns>
         public T Invoke<T>(InvokeServiceRequest request) where T : new()
         {
-            var client = new RestClient(this.endPointUri.AbsoluteUri) { Authenticator = this.GetCredentials() };
+            var client = new RestClient(_endPointUri.AbsoluteUri) { Authenticator = GetCredentials() };
 
             var restRequest = new RestRequest(request.Resource, Method.GET);
             
@@ -69,8 +69,8 @@
 
         private IAuthenticator GetCredentials()
         {
-            return !string.IsNullOrEmpty(this.userName) && !string.IsNullOrEmpty(this.password)
-                       ? new HttpBasicAuthenticator(this.userName, this.password)
+            return !string.IsNullOrEmpty(_userName) && !string.IsNullOrEmpty(_password)
+                       ? new HttpBasicAuthenticator(_userName, _password)
                        : null;
         }
     }

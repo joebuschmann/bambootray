@@ -2,7 +2,6 @@
 
 namespace BambooTray.Services
 {
-
     public interface ISettingsService
     {
         TraySettings TraySettings { get; set; }

@@ -7,15 +7,15 @@ namespace BambooTray.Services
 
     public class SettingsService : ISettingsService
     {
-        private readonly string settingsPath;
+        private readonly string _settingsPath;
         
         public SettingsService(string settingsPath)
         {
-            this.settingsPath = settingsPath;
+            _settingsPath = settingsPath;
             var serializer = new XmlSerializer(typeof(TraySettings));
             using (var streamReader = new StreamReader(settingsPath))
             {
-                this.TraySettings = (TraySettings)serializer.Deserialize(streamReader);
+                TraySettings = (TraySettings)serializer.Deserialize(streamReader);
             }
         }
 
@@ -24,7 +24,7 @@ namespace BambooTray.Services
         public bool SaveTraySettings()
         {
             var serializer = new XmlSerializer(typeof(TraySettings));
-            using (var streamWriter = new StreamWriter(this.settingsPath))
+            using (var streamWriter = new StreamWriter(_settingsPath))
             {
                 serializer.Serialize(streamWriter, TraySettings);
             }

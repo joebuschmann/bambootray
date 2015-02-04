@@ -10,7 +10,7 @@
     {
         public TraySettings()
         {
-            this.Servers = new List<Server>();
+            Servers = new List<Server>();
         }
 
         [XmlArray("servers")]

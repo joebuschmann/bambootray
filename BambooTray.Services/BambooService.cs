@@ -18,25 +18,25 @@ namespace BambooTray.Services
 
         private const string PlanResultServiceEndPoint = "/rest/api/latest/result/{0}";
         
-        private readonly ServiceInvoker serviceInvoker;
+        private readonly ServiceInvoker _serviceInvoker;
 
         public BambooService(Uri serverAddress, string username, string password)
         {
-            this.serviceInvoker = new ServiceInvoker(serverAddress, username, password);
+            _serviceInvoker = new ServiceInvoker(serverAddress, username, password);
         }
 
         public InfoResponse GetServerInfo()
         {
-            return this.serviceInvoker.Invoke<InfoResponse>(new InvokeServiceRequest(InfoServiceEndPoint));
+            return _serviceInvoker.Invoke<InfoResponse>(new InvokeServiceRequest(InfoServiceEndPoint));
         }
 
         public IList<PlanDetailResonse> GetAllPlans()
         {
-            var plans = this.serviceInvoker.Invoke<PlanResponse>(new InvokeServiceRequest(PlanServiceEndPoint)).Plans.Plan;
+            var plans = _serviceInvoker.Invoke<PlanResponse>(new InvokeServiceRequest(PlanServiceEndPoint)).Plans.Plan;
             return
                 plans.Select(
                     plan =>
-                    this.GetPlanDetail(plan.Key)).ToList();
+                    GetPlanDetail(plan.Key)).ToList();
         }
 
         public PlanDetailResonse GetPlanDetail(string key)
@@ -44,7 +44,7 @@ namespace BambooTray.Services
             Condition.Requires(key).IsNotNullOrEmpty();
 
             return
-                this.serviceInvoker.Invoke<PlanDetailResonse>(
+                _serviceInvoker.Invoke<PlanDetailResonse>(
                     new InvokeServiceRequest(string.Format(PlanDetailServiceEndPoint, key)));
         }
 
@@ -53,7 +53,7 @@ namespace BambooTray.Services
             Condition.Requires(key).IsNotNullOrEmpty();
 
             return
-                this.serviceInvoker.Invoke<ResultResponse>(
+                _serviceInvoker.Invoke<ResultResponse>(
                     new InvokeServiceRequest(string.Format(PlanResultServiceEndPoint, key))).Results.Result;
         }
 
@@ -62,7 +62,7 @@ namespace BambooTray.Services
             Condition.Requires(key).IsNotNullOrEmpty();
 
             return
-                this.serviceInvoker.Invoke<ResultDetailResponse>(
+                _serviceInvoker.Invoke<ResultDetailResponse>(
                     new InvokeServiceRequest(string.Format(PlanResultServiceEndPoint, key)));
         }
     }

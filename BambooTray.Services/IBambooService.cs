@@ -1,9 +1,8 @@
-﻿using BambooTray.Domain.Resources;
+﻿using System.Collections.Generic;
+using BambooTray.Domain.Resources;
 
 namespace BambooTray.Services
 {
-    using System.Collections.Generic;
-
     public interface IBambooService
     {
         InfoResponse GetServerInfo();

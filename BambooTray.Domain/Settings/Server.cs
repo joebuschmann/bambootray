@@ -7,11 +7,11 @@ namespace BambooTray.Domain.Settings
     [Serializable]
     public class Server
     {
-        private string password;
+        private string _password;
 
         public Server()
         {
-            this.BuildPlans = new List<BuildPlan>();
+            BuildPlans = new List<BuildPlan>();
         }
 
         [XmlAttribute("id")]
@@ -31,12 +31,12 @@ namespace BambooTray.Domain.Settings
         {
             get
             {
-                return HashHelper.Decrypt(this.password);
+                return HashHelper.Decrypt(_password);
             }
 
             set
             {
-                this.password = value.EndsWith("==") ? value : HashHelper.Encrypt(value);
+                _password = value.EndsWith("==") ? value : HashHelper.Encrypt(value);
             }
         }
 
@@ -44,7 +44,7 @@ namespace BambooTray.Domain.Settings
         {
             get
             {
-                return HashHelper.Decrypt(this.password);
+                return HashHelper.Decrypt(_password);
             }
         }
 

@@ -16,36 +16,36 @@ namespace BambooTray.App
     /// </summary>
     public partial class MainWindow : Form
     {
-        private readonly SettingsService settingsService;
+        private readonly SettingsService _settingsService;
 
-        private readonly List<Icon> buildingIcons;
+        private readonly List<Icon> _buildingIcons;
 
-        private int currentBuildIcon = 0;
+        private int _currentBuildIcon;
         
-        private bool applicationIsExiting;
+        private bool _applicationIsExiting;
 
-        private List<MainViewModel> lastBuildData;
+        private List<MainViewModel> _lastBuildData;
 
         public MainWindow(SettingsService settingsService)
         {
-            this.InitializeComponent();
-            this.settingsService = settingsService;
+            InitializeComponent();
+            _settingsService = settingsService;
 
-            this.notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
-            this.buildingIcons = new List<Icon>();
-            this.buildingIcons = GetBuildingIcons(4);
+            notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
+            _buildingIcons = new List<Icon>();
+            _buildingIcons = GetBuildingIcons(4);
 
-            this.lastBuildData = new List<MainViewModel>();
-            this.buildsListView.SmallImageList = GetSmallImages();
-            this.updateTimer.Interval = this.Settings.PollTime;
-            this.RefreshBuilds();
+            _lastBuildData = new List<MainViewModel>();
+            buildsListView.SmallImageList = GetSmallImages();
+            updateTimer.Interval = Settings.PollTime;
+            RefreshBuilds();
         }
 
-        protected TraySettings Settings
+        private TraySettings Settings
         {
             get
             {
-                return this.settingsService.TraySettings;
+                return _settingsService.TraySettings;
             }
         }
 
@@ -77,8 +77,8 @@ namespace BambooTray.App
         private void RefreshBuilds()
         {
             var plans = new List<MainViewModel>();
-            this.buildsListView.Items.Clear();
-            foreach (var server in this.Settings.Servers)
+            buildsListView.Items.Clear();
+            foreach (var server in Settings.Servers)
             {
                 if (server.BuildPlans.Count > 0)
                 {
@@ -91,16 +91,18 @@ namespace BambooTray.App
                         var resultDetail = planDetail.Results.FirstOrDefault();
                         if (resultDetail != null)
                         {
-                            planDetail.Results.FirstOrDefault().Detail = bambooService.GetResultDetail(resultDetail.Key);
+                            var firstOrDefault = planDetail.Results.FirstOrDefault();
+                            if (firstOrDefault != null)
+                                firstOrDefault.Detail = bambooService.GetResultDetail(resultDetail.Key);
                         }
 
                         plans.Add(MainViewModelBuilder.Build(planDetail, server));
                     }
 
-                    this.GetPlansListViewData(plans);
-                    this.DoNotifications(plans);
-                    this.UpdateTrayIcon(plans);
-                    this.lastBuildData = plans;
+                    GetPlansListViewData(plans);
+                    DoNotifications(plans);
+                    UpdateTrayIcon(plans);
+                    _lastBuildData = plans;
                 }
             }
         }
@@ -122,9 +124,9 @@ namespace BambooTray.App
                 }
             }
 
-            this.iconTimer.Enabled = building;
+            iconTimer.Enabled = building;
 
-            this.notifyIcon.Icon = broken
+            notifyIcon.Icon = broken
                                        ? Icon.FromHandle(Resources.BambooRed.GetHicon())
                                        : Icon.FromHandle(Resources.BambooGreen.GetHicon());
         }
@@ -133,7 +135,7 @@ namespace BambooTray.App
         {
             foreach (var currentBuild in currentBuildData)
             {
-                var lastBuild = this.lastBuildData.FirstOrDefault(x => x.PlanKey == currentBuild.PlanKey);
+                var lastBuild = _lastBuildData.FirstOrDefault(x => x.PlanKey == currentBuild.PlanKey);
                 if (lastBuild != null)
                 {
                     if (lastBuild.BuildActive && !currentBuild.BuildActive)
@@ -141,32 +143,32 @@ namespace BambooTray.App
                         // Build Status has just changed... 
                         if (lastBuild.BuildBroken && !currentBuild.BuildBroken)
                         {
-                            this.notifyIcon.ShowBalloonTip(
-                                this.settingsService.TraySettings.BalloonToolTipTimeOut,
+                            notifyIcon.ShowBalloonTip(
+                                _settingsService.TraySettings.BalloonToolTipTimeOut,
                                 string.Format("{0} {1}: Fixed!", currentBuild.ProjectName, currentBuild.PlanKey),
                                 "Recent checkins have fixed the build.", 
                                 ToolTipIcon.Info);
                         }
                         else if (!lastBuild.BuildBroken && currentBuild.BuildBroken)
                         {
-                            this.notifyIcon.ShowBalloonTip(
-                                this.settingsService.TraySettings.BalloonToolTipTimeOut,
+                            notifyIcon.ShowBalloonTip(
+                                _settingsService.TraySettings.BalloonToolTipTimeOut,
                                 string.Format("{0} {1}: Broken!", currentBuild.ProjectName, currentBuild.PlanKey),
                                 "Recent checkins have broken the build.",
                                 ToolTipIcon.Error);
                         }
                         else if (!lastBuild.BuildBroken && !currentBuild.BuildBroken)
                         {
-                            this.notifyIcon.ShowBalloonTip(
-                                this.settingsService.TraySettings.BalloonToolTipTimeOut,
+                            notifyIcon.ShowBalloonTip(
+                                _settingsService.TraySettings.BalloonToolTipTimeOut,
                                 string.Format("{0} {1}: Build Successful!", currentBuild.ProjectName, currentBuild.PlanKey),
                                 "Yet another successful build.",
                                 ToolTipIcon.Info);
                         }
                         else if (lastBuild.BuildBroken && currentBuild.BuildBroken)
                         {
-                            this.notifyIcon.ShowBalloonTip(
-                                this.settingsService.TraySettings.BalloonToolTipTimeOut,
+                            notifyIcon.ShowBalloonTip(
+                                _settingsService.TraySettings.BalloonToolTipTimeOut,
                                 string.Format("{0} {1}: Broken!", currentBuild.ProjectName, currentBuild.PlanKey),
                                 "The build is still broken.",
                                 ToolTipIcon.Error);
@@ -178,11 +180,17 @@ namespace BambooTray.App
 
         private void GetPlansListViewData(IEnumerable<MainViewModel> currentBuildData)
         {
-            this.buildsListView.Items.Clear();
+            buildsListView.Items.Clear();
             foreach (var p in currentBuildData)
             {
-                var lv = new ListViewItem { Text = p.ServerName };
-                lv.ImageKey = p.BuildActivity == "Building" ? p.BuildActivity : (string.IsNullOrEmpty(p.BuildStatus) ? "Offline" : p.BuildStatus);
+                var lv = new ListViewItem
+                {
+                    Text = p.ServerName,
+                    ImageKey =
+                        p.BuildActivity == "Building"
+                            ? p.BuildActivity
+                            : (string.IsNullOrEmpty(p.BuildStatus) ? "Offline" : p.BuildStatus)
+                };
                 lv.SubItems.Add(p.ProjectName);
                 lv.SubItems.Add(p.PlanKey);
                 lv.SubItems.Add(p.BuildActivity);
@@ -193,14 +201,14 @@ namespace BambooTray.App
                 lv.SubItems.Add(p.LastVcsRevision);
                 lv.SubItems.Add(p.SuccessfulTestCount);
                 lv.SubItems.Add(p.FailedTestCount);
-                this.buildsListView.Items.Add(lv);
+                buildsListView.Items.Add(lv);
             }
         }
 
         private void PreferencesToolStripMenuItemClick(object sender, EventArgs e)
         {
             // Open the Preferences Window
-            var preferencesWindow = new PreferencesWindow(this.settingsService);
+            var preferencesWindow = new PreferencesWindow(_settingsService);
             preferencesWindow.ShowDialog(this);
         }
 
@@ -214,16 +222,16 @@ namespace BambooTray.App
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
         {
             // User has clicked Exit or Keyed ALT+F4
-            this.applicationIsExiting = true;
-            this.notifyIcon.Visible = false;
+            _applicationIsExiting = true;
+            notifyIcon.Visible = false;
             Application.Exit();
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!this.applicationIsExiting)
+            if (!_applicationIsExiting)
             {
-                this.Hide();
+                Hide();
                 e.Cancel = true;
             }
         }
@@ -231,20 +239,20 @@ namespace BambooTray.App
         private void NotifyIconClick(object sender, EventArgs e)
         {
             // When tray icon is clicked, show main window and bring to front
-            this.Show();
-            this.Activate();
-            this.BringToFront();
+            Show();
+            Activate();
+            BringToFront();
         }
 
         private void BuildIconTimerTick(object sender, EventArgs e)
         {
             // This isn't very nice, but to animate the tray icon when a build is in progress.
-            this.notifyIcon.Icon = this.buildingIcons[this.currentBuildIcon];
+            notifyIcon.Icon = _buildingIcons[_currentBuildIcon];
             
-            this.currentBuildIcon++;
-            if (this.currentBuildIcon == 3)
+            _currentBuildIcon++;
+            if (_currentBuildIcon == 3)
             {
-                this.currentBuildIcon = 0;
+                _currentBuildIcon = 0;
             }
         }
 
@@ -252,12 +260,12 @@ namespace BambooTray.App
         {
             try
             {
-                this.RefreshBuilds();
+                RefreshBuilds();
             }
             catch (BambooRequestException)
             {
-                this.notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
-                foreach (ListViewItem item in this.buildsListView.Items)
+                notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
+                foreach (ListViewItem item in buildsListView.Items)
                 {
                     item.ImageKey = "Offline";
                 }
