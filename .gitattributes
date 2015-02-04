@@ -1,0 +1,3 @@
+# Never automatically convert line endings
+* -text
+/.git-templates/commit-template.txt text eol=lf
