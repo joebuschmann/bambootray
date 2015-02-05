@@ -26,6 +26,20 @@ namespace BambooTray.App
 
         private List<MainViewModel> _lastBuildData;
 
+        private enum IconEnum
+        {
+            Grey,
+            Red,
+            Green,
+            Blue,
+            Yellow1,
+            Yellow2,
+            Yellow3,
+            Yellow4
+        };
+
+        private Dictionary<IconEnum, Icon> _statusIcons = new Dictionary<IconEnum, Icon>();  
+
         public MainWindow(SettingsService settingsService)
         {
             InitializeComponent();
@@ -35,8 +49,15 @@ namespace BambooTray.App
             _buildingIcons = new List<Icon>();
             _buildingIcons = GetBuildingIcons(4);
 
+            _statusIcons = new Dictionary<IconEnum, Icon>
+            {
+                {IconEnum.Grey, Icon.FromHandle(Resources.BambooGrey.GetHicon())},
+                {IconEnum.Red, Icon.FromHandle(Resources.BambooRed.GetHicon())},
+                {IconEnum.Green, Icon.FromHandle(Resources.BambooGreen.GetHicon())},
+            };
+
             _lastBuildData = new List<MainViewModel>();
-            buildsListView.SmallImageList = GetSmallImages();
+            buildsListView.SmallImageList = GetListViewImages();
             updateTimer.Interval = Settings.PollTime;
             RefreshBuilds();
         }
@@ -49,7 +70,7 @@ namespace BambooTray.App
             }
         }
 
-        private static ImageList GetSmallImages()
+        private static ImageList GetListViewImages()
         {
             var imageList = new ImageList();
             imageList.Images.Add("Successful", Resources.BambooGreen);
@@ -127,8 +148,8 @@ namespace BambooTray.App
             iconTimer.Enabled = building;
 
             notifyIcon.Icon = broken
-                                       ? Icon.FromHandle(Resources.BambooRed.GetHicon())
-                                       : Icon.FromHandle(Resources.BambooGreen.GetHicon());
+                                       ? _statusIcons[IconEnum.Red]
+                                       : _statusIcons[IconEnum.Green];
         }
 
         private void DoNotifications(IEnumerable<MainViewModel> currentBuildData)
