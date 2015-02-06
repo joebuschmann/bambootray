@@ -167,7 +167,7 @@
     <None Include="Resources\BambooGrey.png" />
     <Content Include="BambooIcon.ico" />
     <None Include="Settings.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

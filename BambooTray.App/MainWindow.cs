@@ -45,7 +45,6 @@ namespace BambooTray.App
             InitializeComponent();
             _settingsService = settingsService;
 
-            notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
             _buildingIcons = new List<Icon>();
             _buildingIcons = GetBuildingIcons(4);
 
@@ -55,6 +54,8 @@ namespace BambooTray.App
                 {IconEnum.Red, Icon.FromHandle(Resources.BambooRed.GetHicon())},
                 {IconEnum.Green, Icon.FromHandle(Resources.BambooGreen.GetHicon())},
             };
+
+            notifyIcon.Icon = _statusIcons[IconEnum.Grey];
 
             _lastBuildData = new List<MainViewModel>();
             buildsListView.SmallImageList = GetListViewImages();
@@ -95,37 +96,50 @@ namespace BambooTray.App
             return icons;
         }
 
+        private void RefreshServerBuild(Server server, List<MainViewModel> plans)
+        {
+            // todo: should be able to populate per server, but I believe this will only handle 1 server
+            try
+            {
+                var bambooService = new BambooService(new Uri(server.Address), server.Username, server.PlaintextPassword);
+
+                foreach (var buildPlan in server.BuildPlans)
+                {
+                    var planDetail = bambooService.GetPlanDetail(buildPlan.Key);
+                    planDetail.Results = bambooService.GetPlanResults(buildPlan.Key);
+                    var resultDetail = planDetail.Results.FirstOrDefault();
+                    if (resultDetail != null)
+                    {
+                        var firstOrDefault = planDetail.Results.FirstOrDefault();
+                        if (firstOrDefault != null)
+                            firstOrDefault.Detail = bambooService.GetResultDetail(resultDetail.Key);
+                    }
+
+                    plans.Add(MainViewModelBuilder.Build(planDetail, server));
+                }
+
+                GetPlansListViewData(plans);
+                DoNotifications(plans);
+                UpdateTrayIcon(plans);
+                _lastBuildData = plans;
+            }
+            catch (BambooRequestException)
+            {
+                notifyIcon.Icon = _statusIcons[IconEnum.Grey];
+                foreach (ListViewItem item in buildsListView.Items)
+                {
+                    item.ImageKey = "Offline";
+                }
+            }
+        }
+
         private void RefreshBuilds()
         {
             var plans = new List<MainViewModel>();
+
             buildsListView.Items.Clear();
-            foreach (var server in Settings.Servers)
-            {
-                if (server.BuildPlans.Count > 0)
-                {
-                    var bambooService = new BambooService(new Uri(server.Address), server.Username, server.PlaintextPassword);
-
-                    foreach (var buildPlan in server.BuildPlans)
-                    {
-                        var planDetail = bambooService.GetPlanDetail(buildPlan.Key);
-                        planDetail.Results = bambooService.GetPlanResults(buildPlan.Key);
-                        var resultDetail = planDetail.Results.FirstOrDefault();
-                        if (resultDetail != null)
-                        {
-                            var firstOrDefault = planDetail.Results.FirstOrDefault();
-                            if (firstOrDefault != null)
-                                firstOrDefault.Detail = bambooService.GetResultDetail(resultDetail.Key);
-                        }
-
-                        plans.Add(MainViewModelBuilder.Build(planDetail, server));
-                    }
-
-                    GetPlansListViewData(plans);
-                    DoNotifications(plans);
-                    UpdateTrayIcon(plans);
-                    _lastBuildData = plans;
-                }
-            }
+            foreach (var server in Settings.Servers.Where(server => server.BuildPlans.Count > 0))
+                RefreshServerBuild(server, plans);
         }
 
         private void UpdateTrayIcon(IEnumerable<MainViewModel> currentBuildData)
@@ -279,18 +293,7 @@ namespace BambooTray.App
 
         private void UpdateTimerTick(object sender, EventArgs e)
         {
-            try
-            {
-                RefreshBuilds();
-            }
-            catch (BambooRequestException)
-            {
-                notifyIcon.Icon = Icon.FromHandle(Resources.BambooGrey.GetHicon());
-                foreach (ListViewItem item in buildsListView.Items)
-                {
-                    item.ImageKey = "Offline";
-                }
-            }
+            RefreshBuilds();
         }
     }
 }

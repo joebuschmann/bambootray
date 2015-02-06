@@ -64,7 +64,18 @@
                         string.IsNullOrEmpty(response.ErrorMessage) ? response.StatusDescription : response.ErrorMessage));
             }
 
-            return JsonConvert.DeserializeObject<T>(response.Content);
+            T result;
+
+            try
+            {
+                result = JsonConvert.DeserializeObject<T>(response.Content);
+            }
+            catch(Exception ex)
+            {
+                throw new BambooRequestException(string.Format("Server Error: {0}", ex));
+            }
+
+            return result;
         }
 
         private IAuthenticator GetCredentials()
