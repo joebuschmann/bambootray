@@ -1,0 +1,1 @@
+﻿Write-ChocolateySuccess "bamboo-tray.portable"
