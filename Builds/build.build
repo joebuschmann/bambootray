@@ -5,14 +5,10 @@
   <loadtasks assembly="C:\Program Files\CSG\DevTools\Lib\NAnt\Dev.NAnt.Tasks.dll" />
   
   <target name="run">
-    <initproperty name="csg.oss.chocolatey.apikey" default="286c8b76-b210-3379-becf-b6dd80b9c3ed" />
-    <initproperty name="csg.oss.chocolatey.source" default="http://10.99.37.7:8081/nexus/service/local/nuget/csg.oss.chocolatey" />
-  
     <nuget action="restore" />
     <msbuild project="BambooTray.sln" />
     
-    <chocopack nuspec="Builds\Chocolatey\bamboo-tray.nuspec" version="1.0.0.3" feed="csg.oss.chocolatey" />
-    <chocopush nupkgdir="Artifacts\Publish\csg.oss.chocolatey" apikey="${csg.oss.chocolatey.apikey}" source="${csg.oss.chocolatey.source}" />
+    <chocopack nuspec="Builds\Chocolatey\bamboo-tray.nuspec" version="1.0.0.3" feed="chocolatey.org" />
   </target>
 
 </project>

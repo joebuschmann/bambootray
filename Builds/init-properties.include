@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<project name="Initialize Properties" basedir="." xmlns="http://nant.sf.net/release/0.92/nant.xsd">
+
+  <property name="build.branch.default" value="master" />
+
+</project>
