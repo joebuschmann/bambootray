@@ -227,7 +227,7 @@ namespace BambooTray.App
                             : (string.IsNullOrEmpty(p.BuildStatus) ? "Offline" : p.BuildStatus)
                 };
                 lv.SubItems.Add(p.ProjectName);
-                lv.SubItems.Add(p.PlanKey);
+                lv.SubItems.Add(string.Format("{0}  ({1})", p.PlanName, p.PlanKey));
                 lv.SubItems.Add(p.BuildActivity);
                 lv.SubItems.Add(p.BuildStatus);
                 lv.SubItems.Add(p.LastBuildTime);

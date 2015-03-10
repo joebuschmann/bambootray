@@ -8,6 +8,8 @@
 
         public string PlanKey { get; set; }
 
+        public string PlanName { get; set; }
+
         public string BuildActivity { get; set; }
 
         public bool BuildActive { get; set; }

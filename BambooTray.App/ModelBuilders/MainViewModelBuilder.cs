@@ -21,6 +21,7 @@ namespace BambooTray.App.ModelBuilders
                            ServerName = string.IsNullOrEmpty(server.Name) ? server.Address : server.Name,
                            ProjectName = plan.ProjectName,
                            PlanKey = plan.Key,
+                           PlanName = plan.Name,
                            BuildActivity = plan.IsActive ? "Building" : "Sleeping",
                            BuildActive = plan.IsActive,
                            BuildStatus = lastResult != null ? lastResult.State : string.Empty,
