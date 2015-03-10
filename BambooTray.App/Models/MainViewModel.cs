@@ -10,6 +10,12 @@
 
         public string PlanName { get; set; }
 
+        public string ShortPlanName { get; set; }
+
+        public string PlanSummaryUrl { get; set; }
+
+        public string LatestResultUrl { get; set; }
+
         public string BuildActivity { get; set; }
 
         public bool BuildActive { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -227,7 +228,7 @@ namespace BambooTray.App
                             : (string.IsNullOrEmpty(p.BuildStatus) ? "Offline" : p.BuildStatus)
                 };
                 lv.SubItems.Add(p.ProjectName);
-                lv.SubItems.Add(string.Format("{0}  ({1})", p.PlanName, p.PlanKey));
+                lv.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = string.Format("{0}  ({1})", p.ShortPlanName, p.PlanKey), Tag = p.PlanKey});
                 lv.SubItems.Add(p.BuildActivity);
                 lv.SubItems.Add(p.BuildStatus);
                 lv.SubItems.Add(p.LastBuildTime);
@@ -237,6 +238,40 @@ namespace BambooTray.App
                 lv.SubItems.Add(p.SuccessfulTestCount);
                 lv.SubItems.Add(p.FailedTestCount);
                 buildsListView.Items.Add(lv);
+            }
+        }
+
+        private void ListViewDoubleClick(object sender, EventArgs e)
+        {
+            if (buildsListView.SelectedItems.Count > 0 && buildsListView.SelectedItems[0].SubItems.Count > 3)
+            {
+                var listViewSubItem = buildsListView.SelectedItems[0].SubItems[2];
+
+                if (listViewSubItem != null && listViewSubItem.Tag != null)
+                {
+                    var planKey = listViewSubItem.Tag.ToString();
+                    var buildData = _lastBuildData ?? new List<MainViewModel>();
+                    var buildDatum = buildData.FirstOrDefault(d => d.PlanKey == planKey);
+
+                    if (buildDatum != null)
+                    {
+                        LaunchBrowser(buildDatum.LatestResultUrl);
+                    }
+                }
+            }
+            
+        }
+
+        private void LaunchBrowser(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Exception e)
+            {
+                string msg = string.Format("Unable to view the web page.{0}{0}{1}", Environment.NewLine, e.Message);
+                MessageBox.Show(msg, "Unable to Launch Browser", MessageBoxButtons.OK);
             }
         }
 
