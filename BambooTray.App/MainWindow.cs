@@ -136,11 +136,14 @@ namespace BambooTray.App
 
         private void RefreshBuilds()
         {
-            var plans = new List<MainViewModel>();
+            using (new PreserveSelectedItemGuard(buildsListView))
+            {
+                var plans = new List<MainViewModel>();
 
-            buildsListView.Items.Clear();
-            foreach (var server in Settings.Servers.Where(server => server.BuildPlans.Count > 0))
-                RefreshServerBuild(server, plans);
+                buildsListView.Items.Clear();
+                foreach (var server in Settings.Servers.Where(server => server.BuildPlans.Count > 0))
+                    RefreshServerBuild(server, plans);
+            }
         }
 
         private void UpdateTrayIcon(IEnumerable<MainViewModel> currentBuildData)
@@ -214,49 +217,47 @@ namespace BambooTray.App
             }
         }
 
-        private void GetPlansListViewData(IEnumerable<MainViewModel> currentBuildData)
+        private void GetPlansListViewData(IEnumerable<MainViewModel> mainViewModels)
         {
             buildsListView.Items.Clear();
-            foreach (var p in currentBuildData)
+            foreach (var mainViewModel in mainViewModels)
             {
                 var lv = new ListViewItem
                 {
-                    Text = p.ServerName,
+                    Text = mainViewModel.ServerName,
+                    Tag = mainViewModel,
                     ImageKey =
-                        p.BuildActivity == "Building"
-                            ? p.BuildActivity
-                            : (string.IsNullOrEmpty(p.BuildStatus) ? "Offline" : p.BuildStatus)
+                        mainViewModel.BuildActivity == "Building"
+                            ? mainViewModel.BuildActivity
+                            : (string.IsNullOrEmpty(mainViewModel.BuildStatus) ? "Offline" : mainViewModel.BuildStatus)
                 };
-                lv.SubItems.Add(p.ProjectName);
-                lv.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = string.Format("{0}  ({1})", p.ShortPlanName, p.PlanKey), Tag = p.PlanKey});
-                lv.SubItems.Add(p.BuildActivity);
-                lv.SubItems.Add(p.BuildStatus);
-                lv.SubItems.Add(p.LastBuildTime);
-                lv.SubItems.Add(p.LastBuildDuration);
-                lv.SubItems.Add(p.LastBuildNumber);
-                lv.SubItems.Add(p.LastVcsRevision);
-                lv.SubItems.Add(p.SuccessfulTestCount);
-                lv.SubItems.Add(p.FailedTestCount);
+
+                lv.SubItems.Add(mainViewModel.ProjectName);
+                lv.SubItems.Add(string.Format("{0}  ({1})", mainViewModel.ShortPlanName, mainViewModel.PlanKey));
+                lv.SubItems.Add(mainViewModel.BuildActivity);
+                lv.SubItems.Add(mainViewModel.BuildStatus);
+                lv.SubItems.Add(mainViewModel.LastBuildTime);
+                lv.SubItems.Add(mainViewModel.LastBuildDuration);
+                lv.SubItems.Add(mainViewModel.LastBuildNumber);
+                lv.SubItems.Add(mainViewModel.LastVcsRevision);
+                lv.SubItems.Add(mainViewModel.SuccessfulTestCount);
+                lv.SubItems.Add(mainViewModel.FailedTestCount);
                 buildsListView.Items.Add(lv);
             }
         }
 
         private void ListViewDoubleClick(object sender, EventArgs e)
         {
-            if (buildsListView.SelectedItems.Count > 0 && buildsListView.SelectedItems[0].SubItems.Count > 3)
+            if (buildsListView.SelectedItems.Count > 0)
             {
-                var listViewSubItem = buildsListView.SelectedItems[0].SubItems[2];
+                var selectedItem = buildsListView.SelectedItems[0];
 
-                if (listViewSubItem != null && listViewSubItem.Tag != null)
+                if (selectedItem != null && selectedItem.Tag != null)
                 {
-                    var planKey = listViewSubItem.Tag.ToString();
-                    var buildData = _lastBuildData ?? new List<MainViewModel>();
-                    var buildDatum = buildData.FirstOrDefault(d => d.PlanKey == planKey);
+                    var mainViewModel = selectedItem.Tag as MainViewModel;
 
-                    if (buildDatum != null)
-                    {
-                        LaunchBrowser(buildDatum.LatestResultUrl);
-                    }
+                    if (mainViewModel != null)
+                        LaunchBrowser(mainViewModel.LatestResultUrl);
                 }
             }
             
@@ -329,6 +330,46 @@ namespace BambooTray.App
         private void UpdateTimerTick(object sender, EventArgs e)
         {
             RefreshBuilds();
+        }
+    }
+
+    internal class PreserveSelectedItemGuard : IDisposable
+    {
+        private readonly ListView _listView;
+        private readonly List<string> _selectedKeys;
+
+        public PreserveSelectedItemGuard(ListView listView)
+        {
+            _listView = listView;
+
+            if (listView.SelectedItems.Count > 0)
+            {
+                _selectedKeys = listView.SelectedItems.Cast<ListViewItem>()
+                    .Where<ListViewItem>(item => item.Tag is MainViewModel)
+                    .Select(item => ((MainViewModel) item.Tag).PlanKey).ToList();
+            }
+            else
+            {
+                _selectedKeys = new List<string>();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_selectedKeys.Count == 0)
+                return;
+
+            var itemsToSelect =
+                _listView.Items.Cast<ListViewItem>()
+                    .Where(
+                        item => item.Tag is MainViewModel && _selectedKeys.Contains(((MainViewModel) item.Tag).PlanKey));
+
+            foreach (var listViewItem in itemsToSelect)
+            {
+                _listView.FocusedItem = listViewItem;
+                listViewItem.Selected = true;
+                listViewItem.EnsureVisible();
+            }
         }
     }
 }
