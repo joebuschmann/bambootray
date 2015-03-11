@@ -136,16 +136,17 @@ namespace BambooTray.App
             // serverColumnHeader
             // 
             this.serverColumnHeader.Text = "Server";
-            this.serverColumnHeader.Width = 100;
+            this.serverColumnHeader.Width = 80;
             // 
             // projectColumnHeader
             // 
             this.projectColumnHeader.Text = "Project";
-            this.projectColumnHeader.Width = 100;
+            this.projectColumnHeader.Width = 74;
             // 
             // planColumnHeader
             // 
             this.planColumnHeader.Text = "Plan";
+            this.planColumnHeader.Width = 119;
             // 
             // buildActivityColumnHeader
             // 

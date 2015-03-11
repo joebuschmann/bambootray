@@ -60,8 +60,8 @@ namespace BambooTray.App
 
             _lastBuildData = new List<MainViewModel>();
             buildsListView.SmallImageList = GetListViewImages();
-            updateTimer.Interval = Settings.PollTime;
             RefreshBuilds();
+            RestartTimer();
         }
 
         private TraySettings Settings
@@ -172,6 +172,9 @@ namespace BambooTray.App
 
         private void DoNotifications(IEnumerable<MainViewModel> currentBuildData)
         {
+            if (!_settingsService.TraySettings.EnableBaloonNotifications)
+                return;
+
             foreach (var currentBuild in currentBuildData)
             {
                 var lastBuild = _lastBuildData.FirstOrDefault(x => x.PlanKey == currentBuild.PlanKey);
@@ -281,6 +284,14 @@ namespace BambooTray.App
             // Open the Preferences Window
             var preferencesWindow = new PreferencesWindow(_settingsService);
             preferencesWindow.ShowDialog(this);
+            RestartTimer();
+        }
+
+        private void RestartTimer()
+        {
+            updateTimer.Stop();
+            updateTimer.Interval = _settingsService.TraySettings.PollTime;
+            updateTimer.Start();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
