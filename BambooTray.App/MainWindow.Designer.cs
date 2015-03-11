@@ -51,10 +51,13 @@ namespace BambooTray.App
             this.successfulTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.failedTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuTray = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.iconTimer = new System.Windows.Forms.Timer(this.components);
             this.mainViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
+            this.contextMenuTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -189,10 +192,25 @@ namespace BambooTray.App
             // 
             // notifyIcon
             // 
+            this.notifyIcon.ContextMenuStrip = this.contextMenuTray;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "Bamboo Tray";
             this.notifyIcon.Visible = true;
-            this.notifyIcon.Click += new System.EventHandler(this.NotifyIconClick);
+            this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIconClick);
+            // 
+            // contextMenuTray
+            // 
+            this.contextMenuTray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemExit});
+            this.contextMenuTray.Name = "contextMenuTray";
+            this.contextMenuTray.Size = new System.Drawing.Size(93, 26);
+            // 
+            // menuItemExit
+            // 
+            this.menuItemExit.Name = "menuItemExit";
+            this.menuItemExit.Size = new System.Drawing.Size(92, 22);
+            this.menuItemExit.Text = "E&xit";
+            this.menuItemExit.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
             // updateTimer
             // 
@@ -222,9 +240,9 @@ namespace BambooTray.App
             this.MinimizeBox = false;
             this.Name = "MainWindow";
             this.Text = "Bamboo Tray";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuTray.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -255,6 +273,8 @@ namespace BambooTray.App
         private System.Windows.Forms.Timer updateTimer;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Timer iconTimer;
+        private System.Windows.Forms.ContextMenuStrip contextMenuTray;
+        private System.Windows.Forms.ToolStripMenuItem menuItemExit;
     }
 }
 

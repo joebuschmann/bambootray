@@ -309,21 +309,26 @@ namespace BambooTray.App
             Application.Exit();
         }
 
-        private void MainFormClosing(object sender, FormClosingEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
             if (!_applicationIsExiting)
             {
                 Hide();
                 e.Cancel = true;
             }
+
+            base.OnFormClosing(e);
         }
 
-        private void NotifyIconClick(object sender, EventArgs e)
+        private void NotifyIconClick(object sender, MouseEventArgs e)
         {
-            // When tray icon is clicked, show main window and bring to front
-            Show();
-            Activate();
-            BringToFront();
+            if (e.Button == MouseButtons.Left)
+            {
+                // When tray icon is clicked, show main window and bring to front
+                Show();
+                Activate();
+                BringToFront();
+            }
         }
 
         private void BuildIconTimerTick(object sender, EventArgs e)
