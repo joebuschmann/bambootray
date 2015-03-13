@@ -13,11 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BambooTray.Tests", "BambooT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BambooTray.App", "BambooTray.App\BambooTray.App.csproj", "{7B0B5E63-C037-4934-87EF-ED635DB90A1E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{153E10E8-709C-4D6D-A442-5518ED60081F}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builds", "Builds", "{D2D233DE-2D5D-450D-9824-8A08ECF5DDB5}"
 	ProjectSection(SolutionItems) = preProject
 		Builds\Chocolatey\bamboo-tray.nuspec = Builds\Chocolatey\bamboo-tray.nuspec
