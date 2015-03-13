@@ -16,11 +16,17 @@ namespace BambooTray.App.ModelBuilders
                 lastResultDetail = lastResult.Detail;
             }
 
+            var planSummaryUrl = string.Format("{0}/browse/{1}", server.Address.TrimEnd('/'), plan.Key);
+
             return new MainViewModel
                        {
                            ServerName = string.IsNullOrEmpty(server.Name) ? server.Address : server.Name,
                            ProjectName = plan.ProjectName,
                            PlanKey = plan.Key,
+                           PlanName = plan.Name,
+                           ShortPlanName = plan.ShortName,
+                           PlanSummaryUrl = planSummaryUrl,
+                           LatestResultUrl = string.Concat(planSummaryUrl, "/latest"),
                            BuildActivity = plan.IsActive ? "Building" : "Sleeping",
                            BuildActive = plan.IsActive,
                            BuildStatus = lastResult != null ? lastResult.State : string.Empty,

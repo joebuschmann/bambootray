@@ -30,202 +30,222 @@ namespace BambooTray.App
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            menuStrip1 = new System.Windows.Forms.MenuStrip();
-            fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            buildsListView = new System.Windows.Forms.ListView();
-            serverColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            projectColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            planColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            buildActivityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            buildStatusColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            lastBuildTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            lastBuildDurationColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            lastBuildNumberColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            lastVcsRevisionColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            successfulTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            failedTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            notifyIcon = new System.Windows.Forms.NotifyIcon(components);
-            updateTimer = new System.Windows.Forms.Timer(components);
-            iconTimer = new System.Windows.Forms.Timer(components);
-            mainViewModelBindingSource = new System.Windows.Forms.BindingSource(components);
-            menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(mainViewModelBindingSource)).BeginInit();
-            SuspendLayout();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buildsListView = new System.Windows.Forms.ListView();
+            this.serverColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.projectColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.planColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.buildActivityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.buildStatusColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lastBuildTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lastBuildDurationColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lastBuildNumberColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lastVcsRevisionColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.successfulTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.failedTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuTray = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateTimer = new System.Windows.Forms.Timer(this.components);
+            this.iconTimer = new System.Windows.Forms.Timer(this.components);
+            this.mainViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.menuStrip1.SuspendLayout();
+            this.contextMenuTray.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).BeginInit();
+            this.SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            fileToolStripMenuItem,
-            helpToolStripMenuItem});
-            menuStrip1.Location = new System.Drawing.Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new System.Drawing.Size(896, 24);
-            menuStrip1.TabIndex = 2;
-            menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(896, 24);
+            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            preferencesToolStripMenuItem,
-            exitToolStripMenuItem});
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            fileToolStripMenuItem.Text = "&File";
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "&File";
             // 
             // preferencesToolStripMenuItem
             // 
-            preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            preferencesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            preferencesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            preferencesToolStripMenuItem.Text = "&Preferences...";
-            preferencesToolStripMenuItem.Click += new System.EventHandler(PreferencesToolStripMenuItemClick);
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.preferencesToolStripMenuItem.Text = "&Preferences...";
+            this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.PreferencesToolStripMenuItemClick);
             // 
             // exitToolStripMenuItem
             // 
-            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            exitToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            exitToolStripMenuItem.Text = "E&xit";
-            exitToolStripMenuItem.Click += new System.EventHandler(ExitToolStripMenuItemClick);
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            aboutToolStripMenuItem});
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
             // 
             // aboutToolStripMenuItem
             // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            aboutToolStripMenuItem.Text = "&About";
-            aboutToolStripMenuItem.Click += new System.EventHandler(AboutToolStripMenuItemClick);
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Text = "&About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
             // buildsListView
             // 
-            buildsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            serverColumnHeader,
-            projectColumnHeader,
-            planColumnHeader,
-            buildActivityColumnHeader,
-            buildStatusColumnHeader,
-            lastBuildTimeColumnHeader,
-            lastBuildDurationColumnHeader,
-            lastBuildNumberColumnHeader,
-            lastVcsRevisionColumnHeader,
-            successfulTestCountColumnHeader,
-            failedTestCountColumnHeader});
-            buildsListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            buildsListView.FullRowSelect = true;
-            buildsListView.Location = new System.Drawing.Point(0, 24);
-            buildsListView.Name = "buildsListView";
-            buildsListView.Size = new System.Drawing.Size(896, 200);
-            buildsListView.TabIndex = 3;
-            buildsListView.UseCompatibleStateImageBehavior = false;
-            buildsListView.View = System.Windows.Forms.View.Details;
+            this.buildsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.serverColumnHeader,
+            this.projectColumnHeader,
+            this.planColumnHeader,
+            this.buildActivityColumnHeader,
+            this.buildStatusColumnHeader,
+            this.lastBuildTimeColumnHeader,
+            this.lastBuildDurationColumnHeader,
+            this.lastBuildNumberColumnHeader,
+            this.lastVcsRevisionColumnHeader,
+            this.successfulTestCountColumnHeader,
+            this.failedTestCountColumnHeader});
+            this.buildsListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buildsListView.FullRowSelect = true;
+            this.buildsListView.Location = new System.Drawing.Point(0, 24);
+            this.buildsListView.Name = "buildsListView";
+            this.buildsListView.Size = new System.Drawing.Size(896, 200);
+            this.buildsListView.TabIndex = 3;
+            this.buildsListView.UseCompatibleStateImageBehavior = false;
+            this.buildsListView.View = System.Windows.Forms.View.Details;
+            this.buildsListView.DoubleClick += new System.EventHandler(this.ListViewDoubleClick);
             // 
             // serverColumnHeader
             // 
-            serverColumnHeader.Text = "Server";
-            serverColumnHeader.Width = 100;
+            this.serverColumnHeader.Text = "Server";
+            this.serverColumnHeader.Width = 80;
             // 
             // projectColumnHeader
             // 
-            projectColumnHeader.Text = "Project";
-            projectColumnHeader.Width = 100;
+            this.projectColumnHeader.Text = "Project";
+            this.projectColumnHeader.Width = 74;
             // 
             // planColumnHeader
             // 
-            planColumnHeader.Text = "Plan";
+            this.planColumnHeader.Text = "Plan";
+            this.planColumnHeader.Width = 119;
             // 
             // buildActivityColumnHeader
             // 
-            buildActivityColumnHeader.Text = "Activity";
+            this.buildActivityColumnHeader.Text = "Activity";
             // 
             // buildStatusColumnHeader
             // 
-            buildStatusColumnHeader.Text = "Status";
-            buildStatusColumnHeader.Width = 70;
+            this.buildStatusColumnHeader.Text = "Status";
+            this.buildStatusColumnHeader.Width = 70;
             // 
             // lastBuildTimeColumnHeader
             // 
-            lastBuildTimeColumnHeader.Text = "Last Build";
-            lastBuildTimeColumnHeader.Width = 85;
+            this.lastBuildTimeColumnHeader.Text = "Last Build";
+            this.lastBuildTimeColumnHeader.Width = 85;
             // 
             // lastBuildDurationColumnHeader
             // 
-            lastBuildDurationColumnHeader.Text = "Duration";
-            lastBuildDurationColumnHeader.Width = 80;
+            this.lastBuildDurationColumnHeader.Text = "Duration";
+            this.lastBuildDurationColumnHeader.Width = 80;
             // 
             // lastBuildNumberColumnHeader
             // 
-            lastBuildNumberColumnHeader.Text = "Build Number";
-            lastBuildNumberColumnHeader.Width = 80;
+            this.lastBuildNumberColumnHeader.Text = "Build Number";
+            this.lastBuildNumberColumnHeader.Width = 80;
             // 
             // lastVcsRevisionColumnHeader
             // 
-            lastVcsRevisionColumnHeader.Text = "VCS Revision";
-            lastVcsRevisionColumnHeader.Width = 80;
+            this.lastVcsRevisionColumnHeader.Text = "VCS Revision";
+            this.lastVcsRevisionColumnHeader.Width = 80;
             // 
             // successfulTestCountColumnHeader
             // 
-            successfulTestCountColumnHeader.Text = "Passing Tests";
-            successfulTestCountColumnHeader.Width = 80;
+            this.successfulTestCountColumnHeader.Text = "Passing Tests";
+            this.successfulTestCountColumnHeader.Width = 80;
             // 
             // failedTestCountColumnHeader
             // 
-            failedTestCountColumnHeader.Text = "Failing Tests";
-            failedTestCountColumnHeader.Width = 80;
+            this.failedTestCountColumnHeader.Text = "Failing Tests";
+            this.failedTestCountColumnHeader.Width = 80;
             // 
             // notifyIcon
             // 
-            notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            notifyIcon.Text = "Bamboo Tray";
-            notifyIcon.Visible = true;
-            notifyIcon.Click += new System.EventHandler(NotifyIconClick);
+            this.notifyIcon.ContextMenuStrip = this.contextMenuTray;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Bamboo Tray";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIconClick);
+            // 
+            // contextMenuTray
+            // 
+            this.contextMenuTray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemExit});
+            this.contextMenuTray.Name = "contextMenuTray";
+            this.contextMenuTray.Size = new System.Drawing.Size(93, 26);
+            // 
+            // menuItemExit
+            // 
+            this.menuItemExit.Name = "menuItemExit";
+            this.menuItemExit.Size = new System.Drawing.Size(92, 22);
+            this.menuItemExit.Text = "E&xit";
+            this.menuItemExit.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
             // updateTimer
             // 
-            updateTimer.Enabled = true;
-            updateTimer.Interval = 20000;
-            updateTimer.Tick += new System.EventHandler(UpdateTimerTick);
+            this.updateTimer.Enabled = true;
+            this.updateTimer.Interval = 20000;
+            this.updateTimer.Tick += new System.EventHandler(this.UpdateTimerTick);
             // 
             // iconTimer
             // 
-            iconTimer.Interval = 200;
-            iconTimer.Tick += new System.EventHandler(BuildIconTimerTick);
+            this.iconTimer.Interval = 200;
+            this.iconTimer.Tick += new System.EventHandler(this.BuildIconTimerTick);
             // 
             // mainViewModelBindingSource
             // 
-            mainViewModelBindingSource.DataSource = typeof(MainViewModel);
+            this.mainViewModelBindingSource.DataSource = typeof(BambooTray.App.Models.MainViewModel);
             // 
             // MainWindow
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(896, 224);
-            Controls.Add(buildsListView);
-            Controls.Add(menuStrip1);
-            Icon = ((System.Drawing.Icon)(resources.GetObject("$Icon")));
-            MainMenuStrip = menuStrip1;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "MainWindow";
-            Text = "Bamboo Tray";
-            FormClosing += new System.Windows.Forms.FormClosingEventHandler(MainFormClosing);
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(mainViewModelBindingSource)).EndInit();
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(896, 224);
+            this.Controls.Add(this.buildsListView);
+            this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "MainWindow";
+            this.Text = "Bamboo Tray";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.contextMenuTray.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -253,6 +273,8 @@ namespace BambooTray.App
         private System.Windows.Forms.Timer updateTimer;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Timer iconTimer;
+        private System.Windows.Forms.ContextMenuStrip contextMenuTray;
+        private System.Windows.Forms.ToolStripMenuItem menuItemExit;
     }
 }
 

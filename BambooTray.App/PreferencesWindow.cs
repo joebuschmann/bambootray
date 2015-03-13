@@ -23,6 +23,45 @@ namespace BambooTray.App
             _settingsService = settingsService;
             PopulateServerListView();
             serversListBox.SelectedIndexChanged += ServersListBoxOnSelectedIndexChanged;
+            PopulateGeneralSettings();
+        }
+
+        private void PopulateGeneralSettings()
+        {
+            TraySettings traySettings = _settingsService.TraySettings;
+
+            numericPollTime.Value = ToSeconds(traySettings.PollTime, (int)numericPollTime.Minimum, (int)numericPollTime.Maximum);
+            numericBalloonTooltipTimeout.Value = ToSeconds(traySettings.BalloonToolTipTimeOut, (int)numericBalloonTooltipTimeout.Minimum, (int)numericBalloonTooltipTimeout.Maximum);
+            checkboxEnableBalloonNotifications.Checked = traySettings.EnableBaloonNotifications;
+
+            numericPollTime.ValueChanged += (sender, args) =>
+            {
+                traySettings.PollTime = ToMilliseconds((int) numericPollTime.Value);
+                _settingsService.SaveTraySettings();
+            };
+
+            numericBalloonTooltipTimeout.ValueChanged += (sender, args) =>
+            {
+                traySettings.BalloonToolTipTimeOut = ToMilliseconds((int) numericBalloonTooltipTimeout.Value);
+                _settingsService.SaveTraySettings();
+            };
+
+            checkboxEnableBalloonNotifications.CheckedChanged += (sender, args) =>
+            {
+                traySettings.EnableBaloonNotifications = checkboxEnableBalloonNotifications.Checked;
+                _settingsService.SaveTraySettings();
+            };
+        }
+
+        private int ToSeconds(int milliseconds, int min, int max)
+        {
+            int timeInSeconds = milliseconds/1000;
+            return Math.Min(Math.Max(timeInSeconds, min), max);
+        }
+
+        private int ToMilliseconds(int seconds)
+        {
+            return seconds*1000;
         }
 
         private static Server GetServerFromViewModel(ServerViewModel serverViewModel)
