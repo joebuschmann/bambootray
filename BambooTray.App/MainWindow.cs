@@ -353,16 +353,22 @@ namespace BambooTray.App
     {
         private readonly ListView _listView;
         private readonly List<string> _selectedKeys;
+        private readonly string _focusedItemKey = "";
 
         public PreserveSelectedItemGuard(ListView listView)
         {
             _listView = listView;
 
+            if (listView.FocusedItem != null)
+                _focusedItemKey = listView.FocusedItem.GetViewModel().PlanKey;
+
             if (listView.SelectedItems.Count > 0)
             {
-                _selectedKeys = listView.SelectedItems.Cast<ListViewItem>()
-                    .Where<ListViewItem>(item => item.Tag is MainViewModel)
-                    .Select(item => ((MainViewModel) item.Tag).PlanKey).ToList();
+                _selectedKeys =
+                    listView.SelectedItems()
+                        .Select(item => item.GetViewModel().PlanKey)
+                        .Where(k => k.Length > 0)
+                        .ToList();
             }
             else
             {
@@ -372,19 +378,21 @@ namespace BambooTray.App
 
         public void Dispose()
         {
-            if (_selectedKeys.Count == 0)
-                return;
+            var focusedItem = _listView.Items().FirstOrDefault(item => item.GetViewModel().PlanKey == _focusedItemKey);
 
-            var itemsToSelect =
-                _listView.Items.Cast<ListViewItem>()
-                    .Where(
-                        item => item.Tag is MainViewModel && _selectedKeys.Contains(((MainViewModel) item.Tag).PlanKey));
+            if (focusedItem != null)
+                _listView.FocusedItem = focusedItem;
 
-            foreach (var listViewItem in itemsToSelect)
+            if (_selectedKeys.Count > 0)
             {
-                _listView.FocusedItem = listViewItem;
-                listViewItem.Selected = true;
-                listViewItem.EnsureVisible();
+                var itemsToSelect =
+                    _listView.Items().Where(item => _selectedKeys.Contains(item.GetViewModel().PlanKey));
+
+                foreach (var listViewItem in itemsToSelect)
+                {
+                    listViewItem.Selected = true;
+                    listViewItem.EnsureVisible();
+                }
             }
         }
     }

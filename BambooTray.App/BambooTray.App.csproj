@@ -84,6 +84,7 @@
     <Compile Include="AddServerWindow.Designer.cs">
       <DependentUpon>AddServerWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ListViewExtensions.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
