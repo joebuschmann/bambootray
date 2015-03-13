@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props" Condition="Exists('..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BambooTray.App</RootNamespace>
-    <AssemblyName>BambooTray.App</AssemblyName>
+    <AssemblyName>BambooTray</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
@@ -28,6 +29,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>59479ff9</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -125,6 +127,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="ILMerge.props" />
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\Halltom.Bamboo.Tray.App.Models.MainViewModel.datasource" />
     <None Include="Properties\DataSources\Halltom.Bamboo.Tray.App.Models.ServerViewModel.datasource" />
     <None Include="Properties\DataSources\Halltom.Bamboo.Tray.Domain.Settings.Server.datasource" />
@@ -159,6 +163,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ILMergeOrder.txt" />
     <None Include="Resources\BambooBlue.png" />
     <None Include="Resources\BambooGreen.png" />
     <None Include="Resources\BambooRed.png" />
@@ -169,7 +174,6 @@
     <None Include="Resources\BambooGrey.png" />
     <Content Include="BambooIcon.ico" />
     <None Include="Settings.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -186,9 +190,16 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)Settings.config $(ProjectDir)$(OutDir)</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props'))" />
+    <Error Condition="!Exists('..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets'))" />
+  </Target>
+  <Import Project="..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets" Condition="Exists('..\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -196,22 +207,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <UsingTask TaskName="ILMerge.MSBuild.Tasks.ILMerge" AssemblyFile="$(SolutionDir)\packages\ILMerge.MSBuild.Tasks.1.0.0.3\tools\ILMerge.MSBuild.Tasks.dll" />
-  <Target Name="AfterBuild" Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <ItemGroup>
-      <MergeAsm Include="$(OutputPath)$(TargetFileName)" />
-      <MergeAsm Include="$(OutputPath)*.dll" />
-      <FilesToDelete Include="$(OutputPath)*.dll" />
-      <FilesToDelete Include="$(OutputPath)*.pdb" />
-      <FilesToDelete Include="$(OutputPath)*.xml" />
-      <FilesToDelete Include="$(OutputPath)BambooTray.App.exe" />
-      <FilesToDelete Include="$(OutputPath)BambooTray.App.exe.config" />
-    </ItemGroup>
-    <PropertyGroup>
-      <MergedAssembly>$(ProjectDir)$(OutDir)BambooTray.exe</MergedAssembly>
-    </PropertyGroup>
-    <Message Text="ILMerge @(MergeAsm) -&gt; $(MergedAssembly)" Importance="high" />
-    <ILMerge InputAssemblies="@(MergeAsm)" OutputFile="$(MergedAssembly)" TargetKind="SameAsPrimaryAssembly" />
-    <Delete Files="@(FilesToDelete)" />
-  </Target>
 </Project>
