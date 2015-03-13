@@ -10,8 +10,7 @@
     <description>CCTray-like interface for Atlassian Bamboo </description>
   </metadata>
   <files>
-    <file src="..\..\BambooTray.App\bin\Debug\**" target="tools" />
-    <file src="chocolateyInstall.ps1" target="tools" />
-    <file src="chocolateyUninstall.ps1" target="tools" />
+    <file src="..\..\Artifacts\Application\**" target="tools" />
+    <file src="BambooTray.exe.gui" target="tools" />
   </files>
 </package>

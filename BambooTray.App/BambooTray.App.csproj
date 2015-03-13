@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BambooTray.App</RootNamespace>
-    <AssemblyName>BambooTray</AssemblyName>
+    <AssemblyName>BambooTray.App</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
@@ -34,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Artifacts\Application\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,7 +45,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Artifacts\Application\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -202,11 +202,11 @@
       <FilesToDelete Include="$(OutputPath)*.dll" />
       <FilesToDelete Include="$(OutputPath)*.pdb" />
       <FilesToDelete Include="$(OutputPath)*.xml" />
-      <FilesToDelete Include="$(OutputPath)BambooTray.exe" />
-      <FilesToDelete Include="$(OutputPath)BambooTray.exe.config" />
+      <FilesToDelete Include="$(OutputPath)BambooTray.App.exe" />
+      <FilesToDelete Include="$(OutputPath)BambooTray.App.exe.config" />
     </ItemGroup>
     <PropertyGroup>
-      <MergedAssembly>$(ProjectDir)$(OutDir)Bamboo Tray.exe</MergedAssembly>
+      <MergedAssembly>$(ProjectDir)$(OutDir)BambooTray.exe</MergedAssembly>
     </PropertyGroup>
     <Message Text="ILMerge @(MergeAsm) -&gt; $(MergedAssembly)" Importance="high" />
     <ILMerge InputAssemblies="@(MergeAsm)" OutputFile="$(MergedAssembly)" TargetKind="SameAsPrimaryAssembly" />
