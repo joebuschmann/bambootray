@@ -7,5 +7,7 @@ namespace BambooTray.Services
         TraySettings TraySettings { get; set; }
 
         bool SaveTraySettings();
+
+        TraySettings CreateCopy();
     }
 }

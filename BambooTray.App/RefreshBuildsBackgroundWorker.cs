@@ -34,7 +34,8 @@ namespace BambooTray.App
 
         public void Run()
         {
-            var arguments = new DoWorkArguments(_settingsService.TraySettings);
+            // Pass in a copy of the tray settings to avoid synchronization issues.
+            var arguments = new DoWorkArguments(_settingsService.CreateCopy());
             _backgroundWorker.RunWorkerAsync(arguments);
         }
 
