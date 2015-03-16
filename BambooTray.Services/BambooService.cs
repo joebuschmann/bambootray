@@ -25,11 +25,6 @@ namespace BambooTray.Services
             _serviceInvoker = new ServiceInvoker(serverAddress, username, password);
         }
 
-        public InfoResponse GetServerInfo()
-        {
-            return _serviceInvoker.Invoke<InfoResponse>(new InvokeServiceRequest(InfoServiceEndPoint));
-        }
-
         public IList<PlanDetailResonse> GetAllPlans()
         {
             var plans = _serviceInvoker.Invoke<PlanResponse>(new InvokeServiceRequest(PlanServiceEndPoint)).Plans.Plan;

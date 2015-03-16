@@ -5,8 +5,6 @@ namespace BambooTray.Services
 {
     public interface IBambooService
     {
-        InfoResponse GetServerInfo();
-
         IList<PlanDetailResonse> GetAllPlans();
 
         PlanDetailResonse GetPlanDetail(string key);
