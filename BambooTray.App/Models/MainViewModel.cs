@@ -1,7 +1,11 @@
-﻿namespace BambooTray.App.Models
+﻿using System;
+
+namespace BambooTray.App.Models
 {
     public class MainViewModel
     {
+        public static readonly MainViewModel Null = new MainViewModel();
+
         public string ServerName { get; set; }
 
         public string ProjectName { get; set; }
