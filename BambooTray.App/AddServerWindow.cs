@@ -32,13 +32,9 @@ namespace BambooTray.App
             _service = new BambooService(Model.ServerAddress, Model.Username, Model.Password);
             try
             {
-                var result = _service.GetServerInfo();
+                var result = _service.GetAllPlans();
                 MessageBox.Show(
-                    string.Format(
-                        "Successfully connected to {0}\n\nServer version is Bamboo {1}, build {2}.",
-                        Model.ServerAddress,
-                        result.Version,
-                        result.BuildNumber),
+                    string.Format("Successfully connected to {0}\n\n", Model.ServerAddress),
                     "Success!",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Asterisk);

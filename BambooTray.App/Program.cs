@@ -11,14 +11,25 @@ namespace BambooTray.App
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static int Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var settingsService = new SettingsService("Settings.config");
+            SettingsService settingsService = null;
+
+            try
+            {
+                settingsService = new SettingsService("Settings.config");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unable to load the settings file.");
+                return 1;
+            }
 
             Application.Run(new MainWindow(settingsService));
+            return 0;
         }
     }
 }

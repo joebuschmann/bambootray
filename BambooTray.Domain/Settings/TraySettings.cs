@@ -11,6 +11,9 @@
         public TraySettings()
         {
             Servers = new List<Server>();
+            PollTime = 20000;
+            EnableBaloonNotifications = true;
+            BalloonToolTipTimeOut = 2000;
         }
 
         [XmlArray("servers")]

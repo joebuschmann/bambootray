@@ -12,11 +12,17 @@ namespace BambooTray.Services
         public SettingsService(string settingsPath)
         {
             _settingsPath = settingsPath;
+
+            if (!File.Exists(settingsPath))
+            {
+                TraySettings = new TraySettings();
+                SaveTraySettings();
+                return;
+            }
+
             var serializer = new XmlSerializer(typeof(TraySettings));
             using (var streamReader = new StreamReader(settingsPath))
-            {
                 TraySettings = (TraySettings)serializer.Deserialize(streamReader);
-            }
         }
 
         public TraySettings TraySettings { get; set; }
