@@ -123,9 +123,12 @@ namespace BambooTray.App
 
             iconTimer.Enabled = building;
 
-            notifyIcon.Icon = broken
-                ? _statusIcons[IconEnum.Red]
-                : _statusIcons[IconEnum.Green];
+            if (!iconTimer.Enabled)
+            {
+                notifyIcon.Icon = broken
+                    ? _statusIcons[IconEnum.Red]
+                    : _statusIcons[IconEnum.Green];
+            }
         }
 
         private void DoNotifications(IEnumerable<MainViewModel> currentBuildData)
