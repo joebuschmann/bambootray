@@ -70,6 +70,7 @@ namespace BambooTray.App
                 }
             }, e =>
             {
+                iconTimer.Enabled = false;
                 notifyIcon.Icon = _statusIcons[MainWindow.IconEnum.Grey];
 
                 foreach (ListViewItem item in buildsListView.Items)
