@@ -4,10 +4,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using BambooTray.App.ModelBuilders;
 using BambooTray.App.Models;
 using BambooTray.App.Properties;
-using BambooTray.Domain.Settings;
 using BambooTray.Services;
 
 namespace BambooTray.App
@@ -17,12 +15,14 @@ namespace BambooTray.App
     /// </summary>
     public partial class MainWindow : Form
     {
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
 
         private readonly List<Icon> _buildingIcons;
 
+        private readonly Dictionary<IconEnum, Icon> _statusIcons = new Dictionary<IconEnum, Icon>();
+
         private int _currentBuildIcon;
-        
+
         private bool _applicationIsExiting;
 
         private List<MainViewModel> _lastBuildData;
@@ -39,9 +39,7 @@ namespace BambooTray.App
             Yellow4
         };
 
-        private Dictionary<IconEnum, Icon> _statusIcons = new Dictionary<IconEnum, Icon>();  
-
-        public MainWindow(SettingsService settingsService)
+        public MainWindow(ISettingsService settingsService)
         {
             InitializeComponent();
             _settingsService = settingsService;
@@ -60,16 +58,26 @@ namespace BambooTray.App
 
             _lastBuildData = new List<MainViewModel>();
             buildsListView.SmallImageList = GetListViewImages();
-            RefreshBuilds();
-            RestartTimer();
-        }
 
-        private TraySettings Settings
-        {
-            get
+            var refreshBuildsBackgroundWorker = new RefreshBuildsBackgroundWorker(_settingsService, viewModels =>
             {
-                return _settingsService.TraySettings;
-            }
+                using (new PreserveSelectedItemGuard(buildsListView))
+                {
+                    RefreshListView(viewModels);
+                    DoNotifications(viewModels);
+                    UpdateTrayIcon(viewModels);
+                    _lastBuildData = viewModels;
+                }
+            }, e =>
+            {
+                iconTimer.Enabled = false;
+                notifyIcon.Icon = _statusIcons[MainWindow.IconEnum.Grey];
+
+                foreach (ListViewItem item in buildsListView.Items)
+                    item.ImageKey = "Offline";
+            });
+
+            refreshBuildsBackgroundWorker.Run();
         }
 
         private static ImageList GetListViewImages()
@@ -97,55 +105,6 @@ namespace BambooTray.App
             return icons;
         }
 
-        private void RefreshServerBuild(Server server, List<MainViewModel> plans)
-        {
-            // todo: should be able to populate per server, but I believe this will only handle 1 server
-            try
-            {
-                var bambooService = new BambooService(new Uri(server.Address), server.Username, server.PlaintextPassword);
-
-                foreach (var buildPlan in server.BuildPlans)
-                {
-                    var planDetail = bambooService.GetPlanDetail(buildPlan.Key);
-                    planDetail.Results = bambooService.GetPlanResults(buildPlan.Key);
-                    var resultDetail = planDetail.Results.FirstOrDefault();
-                    if (resultDetail != null)
-                    {
-                        var firstOrDefault = planDetail.Results.FirstOrDefault();
-                        if (firstOrDefault != null)
-                            firstOrDefault.Detail = bambooService.GetResultDetail(resultDetail.Key);
-                    }
-
-                    plans.Add(MainViewModelBuilder.Build(planDetail, server));
-                }
-
-                GetPlansListViewData(plans);
-                DoNotifications(plans);
-                UpdateTrayIcon(plans);
-                _lastBuildData = plans;
-            }
-            catch (BambooRequestException)
-            {
-                notifyIcon.Icon = _statusIcons[IconEnum.Grey];
-                foreach (ListViewItem item in buildsListView.Items)
-                {
-                    item.ImageKey = "Offline";
-                }
-            }
-        }
-
-        private void RefreshBuilds()
-        {
-            using (new PreserveSelectedItemGuard(buildsListView))
-            {
-                var plans = new List<MainViewModel>();
-
-                buildsListView.Items.Clear();
-                foreach (var server in Settings.Servers.Where(server => server.BuildPlans.Count > 0))
-                    RefreshServerBuild(server, plans);
-            }
-        }
-
         private void UpdateTrayIcon(IEnumerable<MainViewModel> currentBuildData)
         {
             var building = false;
@@ -165,9 +124,12 @@ namespace BambooTray.App
 
             iconTimer.Enabled = building;
 
-            notifyIcon.Icon = broken
-                                       ? _statusIcons[IconEnum.Red]
-                                       : _statusIcons[IconEnum.Green];
+            if (!iconTimer.Enabled)
+            {
+                notifyIcon.Icon = broken
+                    ? _statusIcons[IconEnum.Red]
+                    : _statusIcons[IconEnum.Green];
+            }
         }
 
         private void DoNotifications(IEnumerable<MainViewModel> currentBuildData)
@@ -220,7 +182,7 @@ namespace BambooTray.App
             }
         }
 
-        private void GetPlansListViewData(IEnumerable<MainViewModel> mainViewModels)
+        private void RefreshListView(IEnumerable<MainViewModel> mainViewModels)
         {
             buildsListView.Items.Clear();
             foreach (var mainViewModel in mainViewModels)
@@ -284,14 +246,6 @@ namespace BambooTray.App
             // Open the Preferences Window
             var preferencesWindow = new PreferencesWindow(_settingsService);
             preferencesWindow.ShowDialog(this);
-            RestartTimer();
-        }
-
-        private void RestartTimer()
-        {
-            updateTimer.Stop();
-            updateTimer.Interval = _settingsService.TraySettings.PollTime;
-            updateTimer.Start();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
@@ -341,11 +295,6 @@ namespace BambooTray.App
             {
                 _currentBuildIcon = 0;
             }
-        }
-
-        private void UpdateTimerTick(object sender, EventArgs e)
-        {
-            RefreshBuilds();
         }
     }
 
