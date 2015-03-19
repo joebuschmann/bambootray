@@ -53,7 +53,6 @@ namespace BambooTray.App
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuTray = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.iconTimer = new System.Windows.Forms.Timer(this.components);
             this.mainViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
@@ -212,12 +211,6 @@ namespace BambooTray.App
             this.menuItemExit.Text = "E&xit";
             this.menuItemExit.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
-            // updateTimer
-            // 
-            this.updateTimer.Enabled = true;
-            this.updateTimer.Interval = 20000;
-            this.updateTimer.Tick += new System.EventHandler(this.UpdateTimerTick);
-            // 
             // iconTimer
             // 
             this.iconTimer.Interval = 200;
@@ -270,7 +263,6 @@ namespace BambooTray.App
         private System.Windows.Forms.ColumnHeader successfulTestCountColumnHeader;
         private System.Windows.Forms.ColumnHeader failedTestCountColumnHeader;
         private System.Windows.Forms.NotifyIcon notifyIcon;
-        private System.Windows.Forms.Timer updateTimer;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Timer iconTimer;
         private System.Windows.Forms.ContextMenuStrip contextMenuTray;
