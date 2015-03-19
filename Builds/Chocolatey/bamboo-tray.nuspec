@@ -4,7 +4,7 @@
     <id>bamboo-tray</id>
     <version>$version$</version>
     <title>Bamboo Tray</title>
-    <authors>Tom Hall, Kevin Ortman, Joe Buschmann</authors>
+    <authors>Tom Hall, Kevin.Ortman, Joe Buschmann</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://github.com/KevinOrtman/bambootray</projectUrl>
     <description>CCTray-like interface for Atlassian Bamboo</description>
