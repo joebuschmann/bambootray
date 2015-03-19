@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>bamboo-tray.portable</id>
+    <id>bamboo-tray</id>
     <version>$version$</version>
     <title>Bamboo Tray</title>
     <authors>Tom Hall, Kevin Ortman</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://github.com/KevinOrtman/bambootray</projectUrl>
-    <description>CCTray-like interface for Atlassian Bamboo </description>
+    <description>CCTray-like interface for Atlassian Bamboo</description>
   </metadata>
   <files>
     <file src="..\..\Artifacts\Application\**" target="tools" />
-    <file src="BambooTray.exe.gui" target="tools" />
+    <file src="BambooTray.exe.ignore" target="tools" />
+    <file src="chocolateyInstall.ps1" target="tools" />
   </files>
 </package>

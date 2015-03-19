@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Builds", "Builds", "{D2D233
 	ProjectSection(SolutionItems) = preProject
 		Builds\Chocolatey\bamboo-tray.nuspec = Builds\Chocolatey\bamboo-tray.nuspec
 		Builds\build.build = Builds\build.build
+		Builds\Chocolatey\chocolateyInstall.ps1 = Builds\Chocolatey\chocolateyInstall.ps1
 		Builds\init-properties.include = Builds\init-properties.include
 	EndProjectSection
 EndProject
