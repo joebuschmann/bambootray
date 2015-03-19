@@ -59,25 +59,8 @@ namespace BambooTray.App
             _lastBuildData = new List<MainViewModel>();
             buildsListView.SmallImageList = GetListViewImages();
 
-            var refreshBuildsBackgroundWorker = new RefreshBuildsBackgroundWorker(_settingsService, viewModels =>
-            {
-                using (new PreserveSelectedItemGuard(buildsListView))
-                {
-                    RefreshListView(viewModels);
-                    DoNotifications(viewModels);
-                    UpdateTrayIcon(viewModels);
-                    _lastBuildData = viewModels;
-                }
-            }, e =>
-            {
-                iconTimer.Enabled = false;
-                notifyIcon.Icon = _statusIcons[MainWindow.IconEnum.Grey];
-
-                foreach (ListViewItem item in buildsListView.Items)
-                    item.ImageKey = "Offline";
-            });
-
-            refreshBuildsBackgroundWorker.Run();
+            var refreshBuildsTask = new RefreshBuildsTask(_settingsService, RefreshView, NotifyConnectionError);
+            refreshBuildsTask.Run();
         }
 
         private static ImageList GetListViewImages()
@@ -103,6 +86,17 @@ namespace BambooTray.App
             }
 
             return icons;
+        }
+
+        private void RefreshView(List<MainViewModel> viewModels)
+        {
+            using (new PreserveSelectedItemGuard(buildsListView))
+            {
+                RefreshListView(viewModels);
+                DoNotifications(viewModels);
+                UpdateTrayIcon(viewModels);
+                _lastBuildData = viewModels;
+            }
         }
 
         private void UpdateTrayIcon(IEnumerable<MainViewModel> currentBuildData)
@@ -179,6 +173,27 @@ namespace BambooTray.App
                         }
                     }
                 }
+            }
+        }
+
+        private void NotifyConnectionError(Exception e)
+        {
+            iconTimer.Enabled = false;
+
+            Icon greyIcon = _statusIcons[MainWindow.IconEnum.Grey];
+            bool showBallonTip = notifyIcon.Icon != greyIcon;
+            notifyIcon.Icon = greyIcon;
+
+            foreach (ListViewItem item in buildsListView.Items)
+                item.ImageKey = "Offline";
+
+            if (showBallonTip)
+            {
+                notifyIcon.ShowBalloonTip(
+                    _settingsService.TraySettings.BalloonToolTipTimeOut,
+                    "Server Connection Error",
+                    string.Format("Unable to connect to the server. Error: \n{0}", e.Message),
+                    ToolTipIcon.Error);
             }
         }
 
