@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using BambooTray.App.ModelBuilders;
 using BambooTray.App.Models;
 using BambooTray.Domain.Settings;
@@ -10,47 +10,48 @@ using BambooTray.Services;
 
 namespace BambooTray.App
 {
-    public class RefreshBuildsBackgroundWorker
+    public class RefreshBuildsTask
     {
         private readonly ISettingsService _settingsService;
         private readonly Action<List<MainViewModel>> _onSuccess;
         private readonly Action<Exception> _onError;
         private bool _firstTime = true;
 
-        private readonly BackgroundWorker _backgroundWorker = new BackgroundWorker()
-        {
-            WorkerReportsProgress = false,
-            WorkerSupportsCancellation = false
-        };
-
-        public RefreshBuildsBackgroundWorker(ISettingsService settingsService, Action<List<MainViewModel>> onSuccess, Action<Exception> onError)
+        public RefreshBuildsTask(ISettingsService settingsService, Action<List<MainViewModel>> onSuccess, Action<Exception> onError)
         {
             _settingsService = settingsService;
             _onSuccess = onSuccess;
             _onError = onError;
-            _backgroundWorker.DoWork += DoWork;
-            _backgroundWorker.RunWorkerCompleted += OnCompleted;
         }
 
-        public void Run()
+        public async void Run()
         {
-            // Pass in a copy of the tray settings to avoid synchronization issues.
-            var arguments = new DoWorkArguments(_settingsService.CreateCopy());
-            _backgroundWorker.RunWorkerAsync(arguments);
+            DoWorkResults doWorkResults = await DoWorkAsync();
+
+            if (doWorkResults.MainViewModels != null)
+                _onSuccess(doWorkResults.MainViewModels);
+            else
+                _onError(doWorkResults.Exception);
+
+            Run();
         }
 
-        private void DoWork(object sender, DoWorkEventArgs args)
+        private Task<DoWorkResults> DoWorkAsync()
         {
-            var arguments = (DoWorkArguments)args.Argument;
+            TraySettings traySettings = _settingsService.CreateCopy();
+            return Task<DoWorkResults>.Factory.StartNew(() => DoWork(traySettings));
+        }
 
+        private DoWorkResults DoWork(TraySettings traySettings)
+        {
             if (_firstTime)
                 _firstTime = false;
             else
-                Thread.Sleep(arguments.PollTime);
+                Thread.Sleep(traySettings.PollTime);
 
             var mainViewModels = new List<MainViewModel>();
             List<Server> servers =
-                arguments.Servers.Where(server => server.BuildPlans.Count > 0).ToList();
+                traySettings.Servers.Where(server => server.BuildPlans.Count > 0).ToList();
 
             foreach (var server in servers)
             {
@@ -78,39 +79,11 @@ namespace BambooTray.App
                 }
                 catch (BambooRequestException e)
                 {
-                    args.Result = new DoWorkResults(e);
-                    return;
+                    return new DoWorkResults(e);
                 }
             }
 
-            args.Result = new DoWorkResults(mainViewModels);
-        }
-
-        private void OnCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
-        {
-            var doWorkResults = runWorkerCompletedEventArgs.Result as DoWorkResults;
-
-            if (doWorkResults != null)
-            {
-                if (doWorkResults.MainViewModels != null)
-                    _onSuccess(doWorkResults.MainViewModels);
-                else
-                    _onError(doWorkResults.Exception);
-            }
-            
-            Run();
-        }
-
-        private class DoWorkArguments
-        {
-            public DoWorkArguments(TraySettings traySettings)
-            {
-                PollTime = traySettings.PollTime;
-                Servers = new List<Server>(traySettings.Servers);
-            }
-
-            public int PollTime { get; private set; }
-            public List<Server> Servers { get; private set; }
+            return new DoWorkResults(mainViewModels);
         }
 
         private class DoWorkResults
