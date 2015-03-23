@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using BambooTray.App.ModelBuilders;
 using BambooTray.App.Models;
@@ -26,7 +25,12 @@ namespace BambooTray.App
 
         public async void Run()
         {
-            DoWorkResults doWorkResults = await DoWorkAsync();
+            if (_firstTime)
+                _firstTime = false;
+            else
+                await Task.Delay(_settingsService.TraySettings.PollTime);
+
+            DoWorkResults doWorkResults = await Task.Run(() => DoWork(_settingsService.CreateCopy()));
 
             if (doWorkResults.MainViewModels != null)
                 _onSuccess(doWorkResults.MainViewModels);
@@ -36,19 +40,8 @@ namespace BambooTray.App
             Run();
         }
 
-        private Task<DoWorkResults> DoWorkAsync()
-        {
-            TraySettings traySettings = _settingsService.CreateCopy();
-            return Task<DoWorkResults>.Factory.StartNew(() => DoWork(traySettings));
-        }
-
         private DoWorkResults DoWork(TraySettings traySettings)
         {
-            if (_firstTime)
-                _firstTime = false;
-            else
-                Thread.Sleep(traySettings.PollTime);
-
             var mainViewModels = new List<MainViewModel>();
             List<Server> servers =
                 traySettings.Servers.Where(server => server.BuildPlans.Count > 0).ToList();
